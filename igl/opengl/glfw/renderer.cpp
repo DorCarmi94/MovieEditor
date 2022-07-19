@@ -277,18 +277,18 @@ Renderer::~Renderer()
 }
 
 
-bool Renderer::Picking(int x, int y)
+bool Renderer::Picking_2(int x, int y, int view_port_idx)
 {
 
     Eigen::Vector4d pos;
 
     unsigned char data[4];
     int viewport[4];
-    
-    ActionDraw(0);
-    ActionDraw(1);
-    ActionDraw(2);
+    ActionDraw(view_port_idx);
+    //ActionDraw(2);
     glGetIntegerv(GL_VIEWPORT, viewport); //reading viewport parameters
+    //std::cout << viewport[0]<< " " << viewport[1] << " " << viewport[2] << " " << viewport[3] << " " << std::endl;
+
     glReadPixels(x, viewport[3]- y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
     int i = 0;
@@ -495,11 +495,11 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
     buffers.push_back(new igl::opengl::DrawBuffer());
     maxPixX = viewport.z();
     maxPixY = viewport.w();
-    //xViewport.push_front(0);
+    xViewport.push_front(0);
     yViewport.push_front(0);
     std::list<int>::iterator xit = xViewport.begin();
     int indx = 0;
-    AddCamera(Eigen::Vector3d(-800, 0, 0), 90, 800 / 800, 1.0F, 120.0F);
+    //AddCamera(Eigen::Vector3d(-800, 0, 0), 90, 800 / 800, 1.0F, 120.0F);
     for (++xit; xit != xViewport.end(); ++xit)
     {
         std::list<int>::iterator yit = yViewport.begin();
@@ -521,13 +521,15 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
             }
             //Dor Changes
             // | stencilTest|clearStencil|passStencil 
-            
-            DrawInfo* temp = new DrawInfo(indx, 0, 1, 0, (int)(indx < 1) | depthTest | clearDepth,next_property_id);
-            next_property_id <<= 1;
-            drawInfos.emplace_back(temp);
+                DrawInfo* temp = new DrawInfo(indx, 0, 1, 0, (int)(indx < 1) | depthTest | clearDepth | blend, next_property_id);
+                next_property_id <<= 1;
+                drawInfos.emplace_back(temp);
+
             indx++;
         }
     }
+
+    std::cout<<drawInfos.size()<<std::endl;
 
     if (menu)
     {

@@ -70,9 +70,9 @@ namespace glfw
     next_data_id(1),
     next_shader_id(1),
 	isActive(false),
-      run_time(5.0),
-      material_index(0),
-      texture_index(0)
+    run_time(5.0),
+    material_index(0),
+    texture_index(0)
 
   {
     data_list.front() = new ViewerData();

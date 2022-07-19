@@ -2,14 +2,14 @@
 #include <iostream>
 
 
-static void printMat(const Eigen::Matrix4d& mat)
+static void printMat(const Eigen::Matrix4d & mat)
 {
-	std::cout<<" matrix:"<<std::endl;
+	std::cout << " matrix:" << std::endl;
 	for (int i = 0; i < 4; i++)
 	{
 		for (int j = 0; j < 4; j++)
-			std::cout<< mat(j,i)<<" ";
-		std::cout<<std::endl;
+			std::cout << mat(j, i) << " ";
+		std::cout << std::endl;
 	}
 }
 
@@ -22,7 +22,7 @@ Project::Project()
 //}
 
 void Project::Init()
-{		
+{
 	//unsigned int texIDs[3] = { 0 , 1, 2};
 	//unsigned int slots[3] = { 0 , 1, 2 };
 	//
@@ -103,14 +103,15 @@ void Project::Init()
 
 	AddShape(Cube, -2, TRIANGLES);
 	AddShape(Cube, -1, TRIANGLES);
-	AddShape(Cube, -1, TRIANGLES,1);
-	//AddShape(Sphere, -1, TRIANGLES);
-	
-	
+	AddShape(Cube, -1, TRIANGLES, 1);
+
+
 
 	SetShapeShader(1, 2);
-
 	SetShapeMaterial(1, 1);
+
+	SetShapeShader(2, 2);
+	SetShapeMaterial(2, 2);
 	//SetShapeShader(2, 0);
 
 	SetShapeMaterial(0, 0);
@@ -118,15 +119,15 @@ void Project::Init()
 	float s = 60;
 	ShapeTransformation(scaleAll, s, 0);
 	SetShapeStatic(0);
-	
-//	ReadPixel(); //uncomment when you are reading from the z-buffer
+
+	//	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
 
 void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
 {
-	Shader *s = shaders[shaderIndx];
-	int r = ((shapeIndx) & 0x000000FF) >>  0;
-	int g = ((shapeIndx) & 0x0000FF00) >>  8;
+	Shader* s = shaders[shaderIndx];
+	int r = ((shapeIndx) & 0x000000FF) >> 0;
+	int g = ((shapeIndx) & 0x0000FF00) >> 8;
 	int b = ((shapeIndx) & 0x00FF0000) >> 16;
 
 
@@ -134,8 +135,15 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	s->SetUniformMat4f("Proj", Proj);
 	s->SetUniformMat4f("View", View);
 	s->SetUniformMat4f("Model", Model);
+	s->SetUniform1f("transperancy", data_list[shapeIndx]->transperancy);
+
 	BindMaterial(s, data_list[shapeIndx]->GetMaterial());
-	s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 0.5f);
+	/*if (shapeIndx == 0) {
+		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
+	}
+	else {
+		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, data_list[shapeIndx]->transperancy);
+	}*/
 	s->Unbind();
 }
 
@@ -149,20 +157,20 @@ void Project::WhenTranslate()
 }
 
 void Project::Animate() {
-    if(isActive)
+	if (isActive)
 	{
-		if(selected_data_index > 0 )
+		if (selected_data_index > 0)
 			data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
 	}
 }
 
-void Project::ScaleAllShapes(float amt,int viewportIndx)
+void Project::ScaleAllShapes(float amt, int viewportIndx)
 {
 	for (int i = 1; i < data_list.size(); i++)
 	{
 		if (data_list[i]->Is2Render(viewportIndx))
 		{
-            data_list[i]->MyScale(Eigen::Vector3d(amt, amt, amt));
+			data_list[i]->MyScale(Eigen::Vector3d(amt, amt, amt));
 		}
 	}
 }
@@ -170,4 +178,3 @@ void Project::ScaleAllShapes(float amt,int viewportIndx)
 Project::~Project(void)
 {
 }
-

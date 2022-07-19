@@ -132,6 +132,8 @@ public:
 
     void MoveCamera(int cameraIndx, int type, float amt);
 
+    bool Picking_2(int x, int y, int view_port_index);
+
     bool Picking(int x, int y);
 
     void OutLine();
