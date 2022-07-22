@@ -100,25 +100,31 @@ void Project::Init()
 		AddMaterial(texIDs + i, slots + i, 1);
 	}
 
-
 	AddShape(Cube, -2, TRIANGLES);
 	AddShape(Cube, -1, TRIANGLES);
 	AddShape(Cube, -1, TRIANGLES, 1);
-
-
+	AddShape(Bezier, -1, TRIANGLES);
 
 	SetShapeShader(1, 2);
 	SetShapeMaterial(1, 1);
 
 	SetShapeShader(2, 2);
 	SetShapeMaterial(2, 2);
-	//SetShapeShader(2, 0);
 
+	SetShapeShader(3, 2);
+	SetShapeMaterial(3, 2);
+
+	SetShapeShader(0, 1);
 	SetShapeMaterial(0, 0);
 	selected_data_index = 0;
 	float s = 60;
 	ShapeTransformation(scaleAll, s, 0);
 	SetShapeStatic(0);
+
+	selected_data_index = 3;
+	ShapeTransformation(scaleAll, 0.1, 0);
+
+
 
 	//	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
@@ -138,12 +144,12 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	s->SetUniform1f("transperancy", data_list[shapeIndx]->transperancy);
 
 	BindMaterial(s, data_list[shapeIndx]->GetMaterial());
-	/*if (shapeIndx == 0) {
+	if (shaderIndx == 0) {
 		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 	}
-	else {
+	else if (shaderIndx == 2 && shapeIndx != 0) {
 		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, data_list[shapeIndx]->transperancy);
-	}*/
+	}
 	s->Unbind();
 }
 
@@ -159,8 +165,9 @@ void Project::WhenTranslate()
 void Project::Animate() {
 	if (isActive)
 	{
-		if (selected_data_index > 0)
-			data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
+		//if (selected_data_index > 0)
+			//MoveObjects();
+			//data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
 	}
 }
 

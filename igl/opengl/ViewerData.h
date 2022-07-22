@@ -19,6 +19,8 @@
 #include <Eigen/Core>
 #include <memory>
 #include <vector>
+#include <igl/AABB.h>
+
 
 // Alec: This is a mesh class containing a variety of data types (normals,
 // overlays, material colors, etc.)
@@ -308,6 +310,24 @@ public:
   // our additions
   int layer;
   float transperancy;
+
+  igl::AABB<Eigen::MatrixXd, 3>* tree;
+  Eigen::AlignedBox<double, 3> outer_box;
+  Eigen::MatrixXd reset_V;
+  Eigen::MatrixXi reset_F;
+
+  //bezier
+  float t;
+  Eigen::Vector3d current_position;
+  std::vector<Eigen::Vector3d> p_bezier;
+  float bezier_direction;
+
+  Eigen::Vector3d center_dif;
+
+  IGL_INLINE void bezier_movement(float dis);
+  IGL_INLINE void init_mesh();
+  IGL_INLINE void draw_box(Eigen::AlignedBox<double, 3> box, Eigen::RowVector3d color);
+  IGL_INLINE bool igl::opengl::ViewerData::draw_all(igl::AABB<Eigen::MatrixXd, 3>* tree);
 
 
 

@@ -107,11 +107,10 @@ IGL_INLINE void Renderer::draw_by_info(int info_index){
     else
         glDisable(GL_DEPTH_TEST);
 
-    //if (info->flags & blend)
-    if (false)
+    if (info->flags & blend)
     {
         glEnable(GL_BLEND);
-        glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
+       glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
     else
         glDisable(GL_BLEND);
@@ -292,6 +291,12 @@ bool Renderer::Picking_2(int x, int y, int view_port_idx)
     glReadPixels(x, viewport[3]- y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
     int i = 0;
+    for (int i = 0; i < drawInfos.size(); i++) {
+        if (drawInfos[i]->viewportIndx == view_port_idx) {
+            std::cout << "di: "<< i << " " << drawInfos[i]->flags << std::endl;
+        }
+
+    }
     isPicked =  scn->Picking(data,i);
     return isPicked;
 
@@ -521,7 +526,7 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
             }
             //Dor Changes
             // | stencilTest|clearStencil|passStencil 
-                DrawInfo* temp = new DrawInfo(indx, 0, 1, 0, (int)(indx < 1) | depthTest | clearDepth | blend, next_property_id);
+                DrawInfo* temp = new DrawInfo(indx, 0, 2, 0, (int)(indx < 1) | depthTest | clearDepth | blend, next_property_id);
                 next_property_id <<= 1;
                 drawInfos.emplace_back(temp);
 

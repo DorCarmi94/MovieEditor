@@ -17,6 +17,7 @@
 // Really? Just for GL_NEAREST?
 #include "gl.h"
 #include "igl/parula.h"
+#include <cstdlib>
 
 #include <iostream>
 
@@ -28,7 +29,8 @@ IGL_INLINE igl::opengl::ViewerData::ViewerData()
   face_based        (false),
   double_sided      (false),
   invert_normals    (false),
-  show_overlay      (~unsigned(0)),
+  //show_overlay      (~unsigned(0)),
+  show_overlay      (true),
   show_overlay_depth(~unsigned(0)),
   show_vertex_labels(0),
   show_face_labels  (0),
@@ -45,8 +47,9 @@ IGL_INLINE igl::opengl::ViewerData::ViewerData()
   isCopy            (false),
   isStatic          (false),
   layer(0),
-  transperancy(1)
-
+  transperancy(1),
+  t(0),
+  bezier_direction(-1)
 
 {
   clear();
@@ -106,6 +109,195 @@ IGL_INLINE void igl::opengl::ViewerData::set_mesh(
       cerr << "ERROR (set_mesh): The new mesh has a different number of vertices/faces. Please clear the mesh before plotting."<<endl;
   }
   dirty |= MeshGL::DIRTY_FACE | MeshGL::DIRTY_POSITION;
+  if (id != 0) {
+      init_mesh();
+  }
+}
+
+IGL_INLINE void igl::opengl::ViewerData::draw_box(Eigen::AlignedBox<double, 3> box, Eigen::RowVector3d color) {
+    Eigen::MatrixXd V_box(8, 3);
+    V_box <<
+        (Eigen::RowVector3d)box.corner(box.BottomLeftFloor),
+        (Eigen::RowVector3d)box.corner(box.BottomRightFloor),
+        (Eigen::RowVector3d)box.corner(box.TopLeftFloor),
+        (Eigen::RowVector3d)box.corner(box.TopRightFloor),
+        (Eigen::RowVector3d)box.corner(box.BottomLeftCeil),
+        (Eigen::RowVector3d)box.corner(box.BottomRightCeil),
+        (Eigen::RowVector3d)box.corner(box.TopLeftCeil),
+        (Eigen::RowVector3d)box.corner(box.TopRightCeil);
+
+    Eigen::MatrixXi E_box(12, 2);
+    E_box <<
+        4, 5,
+        4, 0,
+        5, 1,
+        0, 1,
+        6, 7,
+        7, 3,
+        6, 2,
+        2, 3,
+        6, 4,
+        3, 1,
+        7, 5,
+        2, 0;
+
+    // Plot the corners of the bounding box as points
+    add_points(V_box, color);
+
+    // Plot the edges of the bounding box
+    for (unsigned i = 0; i < E_box.rows(); ++i)
+        add_edges
+        (
+            V_box.row(E_box(i, 0)),
+            V_box.row(E_box(i, 1)),
+            color
+        );
+}
+
+IGL_INLINE void igl::opengl::ViewerData::init_mesh() {
+    reset_V = V;
+    reset_F = F;
+    center_dif = Eigen::Vector3d(0, 0, 0);
+    //if (id == 1) {
+        //V = V * 3;
+
+        float LO = -40;
+        float HI = 40;
+        p_bezier.resize(4, Eigen::Vector3d(0, 0, 0));
+
+        for (int i = 0; i < p_bezier.size(); i++) {
+
+            // random number generation https://stackoverflow.com/questions/686353/random-float-number-generation
+            float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+            float y = 0;
+            float z = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+
+            p_bezier[i] = Eigen::Vector3d(x, y, z);
+        }
+        p_bezier[0] = Eigen::Vector3d(0, 0, 0);
+        p_bezier[1] = Eigen::Vector3d(1, 1, 1);
+        p_bezier[2] = Eigen::Vector3d(2, 2, 2);
+        p_bezier[3] = Eigen::Vector3d(3, 3, 3);
+        current_position = p_bezier[0];
+        MyTranslate(p_bezier[0], true);
+        center_dif += p_bezier[0];
+
+        //if (id > 1 && id < 5) {
+        //    score = 5;
+        //}
+        //if (id == 5) {
+        //    movement_effect = 2;
+        //    V = V * 10;
+        //    MyTranslate(Eigen::Vector3d(0, -2, 0), true);
+        //    center_dif += Eigen::Vector3d(0, -2, 0);
+        //}
+        //if (id > 5 && id < 8) {
+        //    score = 10;
+        //}
+        //if (id == 8) {
+        //    movement_effect = 0.6;
+        //}
+        //if (id == 9) {
+        //    score = 50;
+        //}
+        //if (id == 10) {
+        //    score = -100;
+        //}
+        //to_remove = true;
+        //show_overlay = 0;
+
+        // drawing the curve
+        //Eigen::MatrixXd stam(1, 3);
+        //stam << p_bezier[0](0), p_bezier[0](1), p_bezier[0](2);
+        Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
+        //Eigen::Vector
+
+
+        for (float i = 0.1; i < 1; i += 0.01)
+        {
+            Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
+            add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+            curr_pos = new_position - p_bezier[0];
+            if (i < 0.11) {
+                std::cout << new_position[0] << " " << new_position[1] << " " << new_position[2] << " " << std::endl;
+            }
+        }
+
+        float i = 1;
+        Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
+        add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+    //}
+
+    tree = new igl::AABB<Eigen::MatrixXd, 3>();
+    tree->init(V, F);
+    outer_box = tree->m_box;
+
+    Eigen::MatrixXd V_box(8, 3);
+    V_box <<
+        (Eigen::RowVector3d)outer_box.corner(outer_box.BottomLeftFloor),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.BottomRightFloor),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.TopLeftFloor),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.TopRightFloor),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.BottomLeftCeil),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.BottomRightCeil),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.TopLeftCeil),
+        (Eigen::RowVector3d)outer_box.corner(outer_box.TopRightCeil);
+
+    Eigen::MatrixXi E_box(12, 2);
+    E_box <<
+        4, 5,
+        4, 0,
+        5, 1,
+        0, 1,
+        6, 7,
+        7, 3,
+        6, 2,
+        2, 3,
+        6, 4,
+        3, 1,
+        7, 5,
+        2, 0;
+}
+
+IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
+    if (t == 0 || t == 1) {
+        bezier_direction *= -1;
+    }
+
+    float t_diff = bezier_direction * dis;
+
+    t += t_diff;
+
+    if (t > 1) {
+        t = 1;
+    }
+    else if (t < 0) {
+        t = 0;
+    }
+
+    Eigen::Vector3d new_position = pow((1 - t), 3) * p_bezier[0] + 3 * pow((1 - t), 2) * t * p_bezier[1] + 3 * (1 - t) * pow(t, 2) * p_bezier[2] + pow(t, 3) * p_bezier[3];
+    Eigen::Vector3d diff = new_position - current_position;
+    MyTranslate(diff, true);
+    for (int i = 0; i < lines.rows(); i++) {
+        Eigen::VectorXd new_row(9);
+        new_row << lines(i, 0) - diff(0), lines(i, 1) - diff(1), lines(i, 2) - diff(2), lines(i, 3) - diff(0), lines(i, 4) - diff(1), lines(i, 5) - diff(2), lines(i, 6), lines(i, 7), lines(i, 8);
+        lines.row(i) = new_row.transpose();
+    }
+    center_dif += diff;
+    current_position = new_position;
+}
+
+IGL_INLINE bool igl::opengl::ViewerData::draw_all(igl::AABB<Eigen::MatrixXd, 3>* tree) {
+    bool stam = true;
+    if (tree->is_leaf()) {
+        draw_box(tree->m_box, Eigen::RowVector3d(1, 1, 1));
+        return true;
+    }
+    else {
+        stam = draw_all(tree->m_right);
+        stam = draw_all(tree->m_left);
+    }
+    return stam;
 }
 
 IGL_INLINE void igl::opengl::ViewerData::set_vertices(const Eigen::MatrixXd& _V)

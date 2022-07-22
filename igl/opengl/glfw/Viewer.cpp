@@ -123,8 +123,7 @@ namespace glfw
   IGL_INLINE Viewer::~Viewer()
   {
   }
-IGL_INLINE bool
-    Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
+IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                                 const Eigen::MatrixXi &F,
                                 const Eigen::MatrixXd &UV_V,
                                 const Eigen::MatrixXi &UV_F) {
@@ -353,6 +352,10 @@ IGL_INLINE bool
       return;
 
     this->save_mesh_to_file(fname.c_str());
+  }
+
+  IGL_INLINE void Viewer::MoveObjects() {
+      data_list[1]->bezier_movement(0.01);
   }
 
   // Material
@@ -642,6 +645,9 @@ IGL_INLINE bool
           case zCylinder:
               this->load_mesh_from_file("../../data/zcylinder.obj");
               break;
+          case Bezier:
+              this->load_mesh_from_file("../../data/cube.obj");
+              break;
           default:
               break;
 
@@ -656,13 +662,36 @@ IGL_INLINE bool
       data()->show_overlay = 0;
       data()->hide = false;
       if(type == Axis){
-         // data()->is_visible = 0;
+          // data()->is_visible = 0;
           data()->show_faces = 0;
           data()->show_lines = 0;
           data()->show_overlay = 0xFF;
-          data()->add_edges((Eigen::RowVector3d::UnitX()*4),-(Eigen::RowVector3d::UnitX()*4),Eigen::RowVector3d(1,0,0));
-          data()->add_edges((Eigen::RowVector3d::UnitY()*4),-(Eigen::RowVector3d::UnitY()*4),Eigen::RowVector3d(0,1,0));
-          data()->add_edges((Eigen::RowVector3d::UnitZ()*4),-(Eigen::RowVector3d::UnitZ()*4),Eigen::RowVector3d(0,0,1));
+          data()->add_edges((Eigen::RowVector3d::UnitX() * 4), -(Eigen::RowVector3d::UnitX() * 4), Eigen::RowVector3d(1, 0, 0));
+          data()->add_edges((Eigen::RowVector3d::UnitY() * 4), -(Eigen::RowVector3d::UnitY() * 4), Eigen::RowVector3d(0, 1, 0));
+          data()->add_edges((Eigen::RowVector3d::UnitZ() * 4), -(Eigen::RowVector3d::UnitZ() * 4), Eigen::RowVector3d(0, 0, 1));
+      }
+
+      if (type == Bezier) {
+          // data()->is_visible = 0;
+          Eigen::Vector3d p_bezier[4];
+          data()->show_faces = 0;
+          data()->show_lines = 0;
+          data()->show_overlay = 0xFF;
+          p_bezier[0] = Eigen::Vector3d(18.8, -26.6, 0);
+          p_bezier[1] = Eigen::Vector3d(2.6, 12.9, 0);
+          p_bezier[2] = Eigen::Vector3d(-2, -15.6, 0);
+          p_bezier[3] = Eigen::Vector3d(29.5, 33, 0);
+          Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
+
+          for (float i = 0.1; i < 1; i += 0.01)
+          {
+              Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
+              data()->add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+              curr_pos = new_position - p_bezier[0];
+          }
+          float i = 1;
+          Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
+          data()->add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
       }
 
       this->parents.emplace_back(parent);
@@ -839,7 +868,7 @@ IGL_INLINE bool
         }
 
         std::cout << "No picked Shape" << std::endl;
-
+        selected_data_index = 0;
         return false;
 
     }

@@ -25,7 +25,8 @@ int main(int argc,char *argv[])
     rndr->Init(scn,x,y,1,menu); // adding scene and viewports to the renderer
 	//rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 0);
     //rndr->MoveCamera(0, rndr->zTranslate, 10);
-
+	
+	rndr->AddCamera(Eigen::Vector3d(0, 0, 10), CAMERA_ANGLE, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
 	//Split
 	/*rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
 	rndr->MoveCamera(1, rndr->zTranslate, 10);
@@ -33,9 +34,6 @@ int main(int argc,char *argv[])
 	
 	rndr->AddDraw(2,1,1,0, 270);
 	rndr->ClearDrawFlag(2, rndr->toClear | rndr->stencilTest);*/
-
-	
-
 
 
 	//DorChanges
