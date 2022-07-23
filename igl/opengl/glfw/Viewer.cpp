@@ -72,7 +72,8 @@ namespace glfw
 	isActive(false),
     run_time(5.0),
     material_index(0),
-    texture_index(0)
+    texture_index(0),
+    previous_data_index(0)
 
   {
     data_list.front() = new ViewerData();
@@ -426,28 +427,28 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   }
 
   //Bezier
-  IGL_INLINE void Viewer::UpdateBezierInfo(int selected_data_index) {
-      if (selected_data_index > 6 /*!= previous_selected_data_index*/) { //todo bring back
+  IGL_INLINE void Viewer::UpdateBezierInfo(int idx) {
+      if (idx > 6 /*!= previous_selected_data_index*/) { //todo bring back
           //move back to 0, 0, 0 and add the new CP location
           for (int j = 2; j < 6; j++) {
-              data_list[j]->MyTranslate(-data_list[j]->current_position + data_list[selected_data_index]->p_bezier[j-2], false);
-              data_list[j]->current_position += -data_list[j]->current_position + data_list[selected_data_index]->p_bezier[j - 2];
+              data_list[j]->MyTranslate(-data_list[j]->current_position + data_list[idx]->p_bezier[j-2], false);
+              data_list[j]->current_position += -data_list[j]->current_position + data_list[idx]->p_bezier[j - 2];
           }
           //till now updated cp positions, need to adjust bezier line accordingly
           Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
           data_list[1]->clear_edges();
-          data_list[1]->MyTranslate(-data_list[1]->current_position + data_list[selected_data_index]->p_bezier[0], false);//need to adjust the line appropriately
-          data_list[1]->current_position = -data_list[1]->current_position + data_list[selected_data_index]->p_bezier[0];
+          data_list[1]->MyTranslate(-data_list[1]->current_position + data_list[idx]->p_bezier[0], false);
+          data_list[1]->current_position += -data_list[1]->current_position + data_list[idx]->p_bezier[0];
 
           for (float i = 0.1; i < 1; i += 0.01)
           {
-              Eigen::Vector3d new_position = pow((1 - i), 3) * data_list[selected_data_index]->p_bezier[0] + 3 * pow((1 - i), 2) * i * data_list[selected_data_index]->p_bezier[1] + 3 * (1 - i) * pow(i, 2) * data_list[selected_data_index]->p_bezier[2] + pow(i, 3) * data_list[selected_data_index]->p_bezier[3];
-              data_list[1]->add_edges(curr_pos.transpose(), (new_position - data_list[selected_data_index]->p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
-              curr_pos = new_position - data_list[selected_data_index]->p_bezier[0];
+              Eigen::Vector3d new_position = pow((1 - i), 3) * data_list[idx]->p_bezier[0] + 3 * pow((1 - i), 2) * i * data_list[idx]->p_bezier[1] + 3 * (1 - i) * pow(i, 2) * data_list[idx]->p_bezier[2] + pow(i, 3) * data_list[idx]->p_bezier[3];
+              data_list[1]->add_edges(curr_pos.transpose(), (new_position - data_list[idx]->p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
+              curr_pos = new_position - data_list[idx]->p_bezier[0];
           }
           float i = 1;
-          Eigen::Vector3d new_position = pow((1 - i), 3) * data_list[selected_data_index]->p_bezier[0] + 3 * pow((1 - i), 2) * i * data_list[selected_data_index]->p_bezier[1] + 3 * (1 - i) * pow(i, 2) * data_list[selected_data_index]->p_bezier[2] + pow(i, 3) * data_list[selected_data_index]->p_bezier[3];
-          data_list[1]->add_edges(curr_pos.transpose(), (new_position - data_list[selected_data_index]->p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
+          Eigen::Vector3d new_position = pow((1 - i), 3) * data_list[idx]->p_bezier[0] + 3 * pow((1 - i), 2) * i * data_list[idx]->p_bezier[1] + 3 * (1 - i) * pow(i, 2) * data_list[idx]->p_bezier[2] + pow(i, 3) * data_list[idx]->p_bezier[3];
+          data_list[1]->add_edges(curr_pos.transpose(), (new_position - data_list[idx]->p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
 
       }
   }
@@ -819,10 +820,21 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
             {
                 if (selected_data_index > 0) {
                     WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
+                    data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                    if (selected_data_index > 1 && selected_data_index < 6) {
+                        data_list[previous_data_index]->p_bezier[selected_data_index - 2] += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                        UpdateBezierInfo(previous_data_index);
+                    }
                 }
                 else
                 {
                     MyTranslate(Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff,0),0);
+                    //data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                    //if (selected_data_index > 1 && selected_data_index < 6) {
+                    //    data_list[previous_data_index]->p_bezier[selected_data_index - 2] += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                    //    std::cout << "previous_data_index: " << previous_data_index << " selected_data_index: " << selected_data_index << std::endl;
+                    //    UpdateBezierInfo(previous_data_index);
+                    //}
                 }
                 
             }
@@ -892,13 +904,21 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
             data[0] +
             data[1] * 256 +
             data[2] * 256 * 256;
-
+        if (selected_data_index > 5) {
+            previous_data_index = selected_data_index;
+        }
         for (int i = 0; i < data_list.size(); i++) {
             if (pickedID == i) {
                 std::cout << "Picked shape : " << i << std::endl;
                 // pShapes.push_back(i);
                 selected_data_index = i;
                 //SetShapeShader(i, 1);
+                if (selected_data_index < 6) {
+                    UpdateBezierInfo(previous_data_index);
+                }
+                else {
+                    UpdateBezierInfo(selected_data_index);
+                }
                 return true;
             }
         }

@@ -187,6 +187,7 @@ public:
     unsigned int texture_index;
     unsigned int material_index;
     int layers;
+    int previous_data_index;
 
 
     Shader* overlay_shader;

@@ -179,7 +179,7 @@ void Renderer::UpdatePosition(double xpos, double ypos)
 {
 	xrel = xold - xpos;
 	yrel = yold - ypos;
-    scn->data_list[scn->selected_data_index]->current_position += Eigen::Vector3d(xrel, yrel, 0);
+    //scn->data_list[scn->selected_data_index]->current_position += Eigen::Vector3d(xrel, yrel, 0);
 	xold = xpos;
 	yold = ypos;
     //if(scn->selected_data_index > 2 && scn->selected_data_index < 6){
@@ -206,7 +206,7 @@ float Renderer::UpdatePosition(float xpos, float ypos)
 {
     xrel = xold - xpos;
     yrel = yold - ypos;
-    scn->data_list[scn->selected_data_index]->current_position += Eigen::Vector3d(xrel, yrel, 0);
+    //scn->data_list[scn->selected_data_index]->current_position += Eigen::Vector3d(xrel, yrel, 0);
     xold = xpos;
     yold = ypos;
     return yrel;
