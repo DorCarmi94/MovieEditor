@@ -240,7 +240,10 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
     //for (unsigned int i = 0; i<plugins.size(); ++i)
     //  if (plugins[i]->post_load())
     //    return true;
-
+    if (data_list.size() > 6) {
+        data()->init_mesh();
+        //std::cout << data_list.size() << std::endl;
+    }
     return true;
   }
 
@@ -401,7 +404,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   //our additions
   IGL_INLINE void Viewer::ChangeLayer(int layer)//todo maybe change later
   {
-      selected_data_index = 1;
+      //selected_data_index = 1;
       if (selected_data_index != 0) {
           data_list[selected_data_index]->layer = layer;
       }
@@ -414,11 +417,43 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
   IGL_INLINE void Viewer::RemoveLayer(int layer)//todo
   {
-      //if (layer > 0) {
-      //    for 
-      //}
-      //layers--;
+      /*if (layer > 0) {
+          for (int i = 0; i < data_list.size(); i++) {
+
+          }
+      }
+      layers--;*/
   }
+
+  //Bezier
+  IGL_INLINE void Viewer::UpdateBezierInfo(int selected_data_index) {
+      if (selected_data_index > 6 /*!= previous_selected_data_index*/) { //todo bring back
+          //move back to 0, 0, 0 and add the new CP location
+          for (int j = 2; j < 6; j++) {
+              data_list[j]->MyTranslate(-data_list[j]->current_position + data_list[selected_data_index]->p_bezier[j-2], false);
+              data_list[j]->current_position += -data_list[j]->current_position + data_list[selected_data_index]->p_bezier[j - 2];
+          }
+          //till now updated cp positions, need to adjust bezier line accordingly
+          Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
+          data_list[1]->clear_edges();
+          data_list[1]->MyTranslate(-data_list[1]->current_position + data_list[selected_data_index]->p_bezier[0], false);//need to adjust the line appropriately
+          data_list[1]->current_position = -data_list[1]->current_position + data_list[selected_data_index]->p_bezier[0];
+
+          for (float i = 0.1; i < 1; i += 0.01)
+          {
+              Eigen::Vector3d new_position = pow((1 - i), 3) * data_list[selected_data_index]->p_bezier[0] + 3 * pow((1 - i), 2) * i * data_list[selected_data_index]->p_bezier[1] + 3 * (1 - i) * pow(i, 2) * data_list[selected_data_index]->p_bezier[2] + pow(i, 3) * data_list[selected_data_index]->p_bezier[3];
+              data_list[1]->add_edges(curr_pos.transpose(), (new_position - data_list[selected_data_index]->p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
+              curr_pos = new_position - data_list[selected_data_index]->p_bezier[0];
+          }
+          float i = 1;
+          Eigen::Vector3d new_position = pow((1 - i), 3) * data_list[selected_data_index]->p_bezier[0] + 3 * pow((1 - i), 2) * i * data_list[selected_data_index]->p_bezier[1] + 3 * (1 - i) * pow(i, 2) * data_list[selected_data_index]->p_bezier[2] + pow(i, 3) * data_list[selected_data_index]->p_bezier[3];
+          data_list[1]->add_edges(curr_pos.transpose(), (new_position - data_list[selected_data_index]->p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
+
+      }
+  }
+
+
+
 
   IGL_INLINE ViewerData* Viewer::data(int mesh_id /*= -1*/)
   {
@@ -677,6 +712,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
           data()->show_faces = 0;
           data()->show_lines = 0;
           data()->show_overlay = 0xFF;
+          data()->line_width = 5.0f;
           p_bezier[0] = Eigen::Vector3d(18.8, -26.6, 0);
           p_bezier[1] = Eigen::Vector3d(2.6, 12.9, 0);
           p_bezier[2] = Eigen::Vector3d(-2, -15.6, 0);
@@ -686,12 +722,12 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
           for (float i = 0.1; i < 1; i += 0.01)
           {
               Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
-              data()->add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+              data()->add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
               curr_pos = new_position - p_bezier[0];
           }
           float i = 1;
           Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
-          data()->add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+          data()->add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 1, 0));
       }
 
       this->parents.emplace_back(parent);

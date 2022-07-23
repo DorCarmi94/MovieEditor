@@ -59,7 +59,8 @@
 		}
 		else
 		{
-			rndr->MoveCamera(0, rndr->zTranslate, (float)yoffset);
+			int chosen_view_port_camera = findViewPort(window, xoffset, yoffset); //todo WIP Currently doesnt seem to switch view port
+			rndr->MoveCamera(chosen_view_port_camera, rndr->zTranslate, (float)yoffset);
 		}
 		
 	}
@@ -159,11 +160,13 @@
 				break;
 			case GLFW_KEY_1:
 				std::cout << "picked 1\n";
-				scn->selected_data_index = 1;
+				scn->selected_data_index = 7;
+				scn->UpdateBezierInfo(7);
 				break;
 			case GLFW_KEY_2:
 				std::cout << "picked 2\n";
-				scn->selected_data_index = 2;
+				scn->selected_data_index = 8;
+				scn->UpdateBezierInfo(8);
 				break;
 			case GLFW_KEY_3:
 				std::cout << "picked 3\n";

@@ -311,8 +311,6 @@ public:
   int layer;
   float transperancy;
 
-  igl::AABB<Eigen::MatrixXd, 3>* tree;
-  Eigen::AlignedBox<double, 3> outer_box;
   Eigen::MatrixXd reset_V;
   Eigen::MatrixXi reset_F;
 
@@ -324,11 +322,9 @@ public:
 
   Eigen::Vector3d center_dif;
 
+  IGL_INLINE void UpdateBezierCP(std::vector<Eigen::Vector3d> new_p_bezier);
   IGL_INLINE void bezier_movement(float dis);
   IGL_INLINE void init_mesh();
-  IGL_INLINE void draw_box(Eigen::AlignedBox<double, 3> box, Eigen::RowVector3d color);
-  IGL_INLINE bool igl::opengl::ViewerData::draw_all(igl::AABB<Eigen::MatrixXd, 3>* tree);
-
 
 
     // OpenGL representation of the mesh

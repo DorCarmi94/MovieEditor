@@ -239,7 +239,7 @@ namespace igl
                         {
                             viewer->open_dialog_save_mesh();
                         }
-                        if (viewer->selected_data_index != 0) {
+                        if (viewer->selected_data_index > 6) {
                             ImGui::SliderFloat("Opacity", &viewer->data_list[viewer->selected_data_index]->transperancy, 0, 1);
                         }
 

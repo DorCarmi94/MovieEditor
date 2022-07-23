@@ -88,6 +88,10 @@ namespace glfw
     IGL_INLINE void Viewer::AddLayer();
     IGL_INLINE void Viewer::RemoveLayer(int layer);
 
+    //Bezier
+    IGL_INLINE void Viewer::UpdateBezierInfo(int idx);
+
+
    
     // Scene IO
     IGL_INLINE bool load_scene();

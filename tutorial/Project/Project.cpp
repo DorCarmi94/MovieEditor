@@ -23,70 +23,10 @@ Project::Project()
 
 void Project::Init()
 {
-	//unsigned int texIDs[3] = { 0 , 1, 2};
-	//unsigned int slots[3] = { 0 , 1, 2 };
-	//
-	//AddShader("../../shaders/pickingShader");
-	//AddShader("../../shaders/cubemapShader");
-	//AddShader("../../shaders/basicShader");
-	//AddShader("../../shaders/basicShader");
-	//
-	//AddTexture("../../textures/plane.png",2);
-	//AddTexture("../../textures/cubemaps/Daylight Box_", 3);
-	//AddTexture("../../textures/grass.bmp", 2);
-	////AddTexture("../res/textures/Cat_bump.jpg", 2);
-
-	//AddMaterial(texIDs,slots, 1);
-	//AddMaterial(texIDs+1, slots+1, 1);
-	//AddMaterial(texIDs + 2, slots + 2, 1);
-	//
-	//AddShape(Cube, -2, TRIANGLES);
-	//AddShape(zCylinder, -1, TRIANGLES);
-	//AddShape(zCylinder, 1, TRIANGLES);
-	//AddShape(zCylinder, 2, TRIANGLES);
-	//AddShape(Axis, -1, LINES);
-	//AddShape(Cube, -1, TRIANGLES);
-
-	//SetShapeShader(1, 1);
-	//SetShapeShader(2, 1);
-	//SetShapeShader(3, 1);
-	//SetShapeShader(4, 1);
-	//SetShapeShader(5, 1);
-
-
-	//SetShapeMaterial(1, 0);
-	//SetShapeMaterial(2, 0);	
-	//SetShapeMaterial(3, 0);	
-	//SetShapeMaterial(4, 0);
-	//SetShapeMaterial(5, 0);
-
-
-	//SetShapeMaterial(0, 1);
-
-
-	//selected_data_index = 0;
-	//float cylinderLen = 1.6f;
-	//float s = 60;
-	//ShapeTransformation(scaleAll, s,0);
-	//selected_data_index = 1;
-	//data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
-	//ShapeTransformation(zTranslate, cylinderLen / 2.0, 1);
-	//
-	//selected_data_index = 2;
-	//ShapeTransformation(zTranslate, cylinderLen , 1);
-	//data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
-	//
-	//selected_data_index = 3;
-	//ShapeTransformation(zTranslate, cylinderLen, 1);
-	//data()->SetCenterOfRotation(Eigen::Vector3d(0, 0, -cylinderLen / 2.0));
-
-	//selected_data_index = 0;
-	//SetShapeStatic(0);
-
 	unsigned int texIDs[3] = {
 		 AddTexture("../../textures/cubemaps/Daylight Box_", 3),
 		 AddTexture("../../textures/box0.bmp", 2),
-		 AddTexture("../../textures/grass.bmp", 2)
+	     AddTexture("../../textures/plane.png", 2)
 	};
 
 	unsigned int slots[3] = { 0 , 1 };
@@ -100,33 +40,56 @@ void Project::Init()
 		AddMaterial(texIDs + i, slots + i, 1);
 	}
 
+	//skybox start
 	AddShape(Cube, -2, TRIANGLES);
-	AddShape(Cube, -1, TRIANGLES);
-	AddShape(Cube, -1, TRIANGLES, 1);
-	AddShape(Bezier, -1, TRIANGLES);
-
-	SetShapeShader(1, 2);
-	SetShapeMaterial(1, 1);
-
-	SetShapeShader(2, 2);
-	SetShapeMaterial(2, 2);
-
-	SetShapeShader(3, 2);
-	SetShapeMaterial(3, 2);
-
 	SetShapeShader(0, 1);
 	SetShapeMaterial(0, 0);
 	selected_data_index = 0;
 	float s = 60;
 	ShapeTransformation(scaleAll, s, 0);
 	SetShapeStatic(0);
+	//skybox end
 
-	selected_data_index = 3;
-	ShapeTransformation(scaleAll, 0.1, 0);
+	//bezier start
+	AddShape(Bezier, -1, LINES);
+	SetShapeShader(1, 2);
+	SetShapeMaterial(1, 2);
+
+	selected_data_index = 1;
+	//ShapeTransformation(scaleAll, 0.1, 0);
+
+	for (int i = 2; i < 6; i++) {
+		AddShape(Sphere, -1, TRIANGLES);
+		SetShapeShader(i, 2);
+		SetShapeMaterial(i, 1);
+		selected_data_index = i;
+		ShapeTransformation(scaleAll, 0.25, 0);
+	}
+
+	AddShape(Axis, -1, LINES, 1);
+	SetShapeShader(6, 2);
+	SetShapeMaterial(6, 2);
+	SetShapeStatic(6);
+
+	//bezier end
+
+	AddShape(Cube, -1, TRIANGLES);
+	SetShapeShader(7, 2);
+	SetShapeMaterial(7, 1);
+
+	AddShape(Cube, -1, TRIANGLES);
+	SetShapeShader(8, 2);
+	SetShapeMaterial(8, 1);
+
+	std::vector<Eigen::Vector3d> p_bezier;
+	p_bezier.push_back(Eigen::Vector3d(18.8, -26.6, 0));
+	p_bezier.push_back(Eigen::Vector3d(2.6, 12.9, 0));
+	p_bezier.push_back(Eigen::Vector3d(-2, -15.6, 0));
+	p_bezier.push_back(Eigen::Vector3d(29.5, 33, 0));
+	data_list[7]->UpdateBezierCP(p_bezier);
+	//UpdateBezierInfo();
 
 
-
-	//	ReadPixel(); //uncomment when you are reading from the z-buffer
 }
 
 void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)

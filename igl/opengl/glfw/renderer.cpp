@@ -179,8 +179,11 @@ void Renderer::UpdatePosition(double xpos, double ypos)
 {
 	xrel = xold - xpos;
 	yrel = yold - ypos;
+    scn->data_list[scn->selected_data_index]->current_position += Eigen::Vector3d(xrel, yrel, 0);
 	xold = xpos;
 	yold = ypos;
+    //if(scn->selected_data_index > 2 && scn->selected_data_index < 6){
+    //}
 }
 
 
@@ -203,6 +206,7 @@ float Renderer::UpdatePosition(float xpos, float ypos)
 {
     xrel = xold - xpos;
     yrel = yold - ypos;
+    scn->data_list[scn->selected_data_index]->current_position += Eigen::Vector3d(xrel, yrel, 0);
     xold = xpos;
     yold = ypos;
     return yrel;
@@ -533,8 +537,6 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
             indx++;
         }
     }
-
-    std::cout<<drawInfos.size()<<std::endl;
 
     if (menu)
     {
