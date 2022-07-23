@@ -804,11 +804,16 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
             //     selected_data_index = pShape;
             //     WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
             // }
-            if (selected_data_index > 0) {
+            if (selected_data_index > 5) {
+                std::cout << "11111" << std::endl;
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
+                data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(1, 0, 0), yrel / 100.0);
+
+                data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(0, 1, 0), xrel / 100.0);
             }
             else
             {
+                std::cout << "2222222" << std::endl;
                 MyRotate(Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0), 0);
             }
         }
