@@ -48,7 +48,7 @@ void Project::Init()
 	SetShapeShader(0, 1);
 	SetShapeMaterial(0, 0);
 	selected_data_index = 0;
-	float s = 60;
+	float s = 100;
 	ShapeTransformation(scaleAll, s, 0);
 	SetShapeStatic(0);
 	//skybox end

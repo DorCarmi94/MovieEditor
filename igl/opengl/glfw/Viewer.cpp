@@ -465,7 +465,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         isActive = !isActive;
         if (isActive) {
             current_run_time = igl::get_seconds();
-            std::cout << current_run_time << std::endl;
             copy_current_runtime = display_current_runtime;
         }
         return isActive;

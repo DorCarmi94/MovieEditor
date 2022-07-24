@@ -356,15 +356,15 @@ namespace igl
                         float w = ImGui::GetContentRegionAvailWidth();
                         float p = ImGui::GetStyle().FramePadding.x;
 
-                        if (ImGui::ImageButton("Play##Animate", ImVec2((w - p) / 2.f, 0)))
+                        if (ImGui::Button("Play##Animate", ImVec2((w - p) / 2.f, 0)))
                         {
                             viewer->SetAnimation();
                         }
                         ImGui::PushItemWidth(80 * menu_scaling());
                         ImGui::DragFloat("Animation Run Time", &(viewer->display_runtime), 0.05f, 1.0f, 90.0f);
                         ImGui::PopItemWidth();
-                        ImGui::SameLine(0, p);
                         ImGui::SliderFloat("Current Run Time", &viewer->display_current_runtime, 0, viewer->display_runtime);
+
                     }
 
                     // Viewing options
