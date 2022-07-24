@@ -21,7 +21,6 @@
 
 #include <iostream>
 
-
 IGL_INLINE igl::opengl::ViewerData::ViewerData()
 : dirty(MeshGL::DIRTY_ALL),
   show_faces        (~unsigned(0)),
@@ -50,7 +49,8 @@ IGL_INLINE igl::opengl::ViewerData::ViewerData()
   transperancy(1),
   t(0),
   bezier_direction(-1),
-  current_position(0, 0, 0)
+  current_position(0, 0, 0),
+  delay(0.0)
 
 {
   clear();
@@ -117,54 +117,43 @@ IGL_INLINE void igl::opengl::ViewerData::set_mesh(
 }
 
 IGL_INLINE void igl::opengl::ViewerData::init_mesh() {
-    reset_V = V;//todo maybe remove
-    reset_F = F;
     center_dif = Eigen::Vector3d(0, 0, 0);
-    //if (id == 1) {
-        //V = V * 3;
+  
+    //float LO = -5;
+    //float HI = 5;
+    p_bezier.resize(4, Eigen::Vector3d(0, 0, 0));
 
-        float LO = -5;
-        float HI = 5;
-        p_bezier.resize(4, Eigen::Vector3d(0, 0, 0));
+    //for (int i = 0; i < p_bezier.size(); i++) {
 
-        for (int i = 0; i < p_bezier.size(); i++) {
+    //    // random number generation https://stackoverflow.com/questions/686353/random-float-number-generation
+    //    float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+    //    float z = 0;
+    //    float y = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
 
-            // random number generation https://stackoverflow.com/questions/686353/random-float-number-generation
-            float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
-            float z = 0;
-            float y = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
+    //    p_bezier[i] = Eigen::Vector3d(x, y, z);
+    //}
+    p_bezier[0] = Eigen::Vector3d(-2, -3, 0);
+    p_bezier[1] = Eigen::Vector3d(-1, 0, 0);
+    p_bezier[2] = Eigen::Vector3d(1, 0, 0);
+    p_bezier[3] = Eigen::Vector3d(2, -3, 0);
+    //current_position = p_bezier[0];
+    //MyTranslate(p_bezier[0], true);
+    //center_dif += p_bezier[0];
+    //p_bezier[0] = Eigen::Vector3d(-2, -2, 0); //todo just for testing now, remove later
+    //p_bezier[1] = Eigen::Vector3d(-0.5, -0.5, 0);
+    //p_bezier[2] = Eigen::Vector3d(3, 1, 0);
+    //p_bezier[3] = Eigen::Vector3d(5, 4, 0);
 
-            p_bezier[i] = Eigen::Vector3d(x, y, z);
-        }
-        p_bezier[0] = Eigen::Vector3d(-2, -3, 0);
-        p_bezier[1] = Eigen::Vector3d(-1, 0, 0);
-        p_bezier[2] = Eigen::Vector3d(1, 0, 0);
-        p_bezier[3] = Eigen::Vector3d(2, -3, 0);
-        //current_position = p_bezier[0];
-        //MyTranslate(p_bezier[0], true);
-        //center_dif += p_bezier[0];
-        //p_bezier[0] = Eigen::Vector3d(-2, -2, 0); //todo just for testing now, remove later
-        //p_bezier[1] = Eigen::Vector3d(-0.5, -0.5, 0);
-        //p_bezier[2] = Eigen::Vector3d(3, 1, 0);
-        //p_bezier[3] = Eigen::Vector3d(5, 4, 0);
+    //for (float i = 0.1; i < 1; i += 0.01)
+    //{
+    //    Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
+    //    add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+    //    curr_pos = new_position - p_bezier[0];
+    //}
 
-        // drawing the curve
-        //Eigen::MatrixXd stam(1, 3);
-        //stam << p_bezier[0](0), p_bezier[0](1), p_bezier[0](2);
-        //Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
-        //Eigen::Vector
-
-
-        //for (float i = 0.1; i < 1; i += 0.01)
-        //{
-        //    Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
-        //    add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
-        //    curr_pos = new_position - p_bezier[0];
-        //}
-
-        //float i = 1;
-        //Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
-        //add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
+    //float i = 1;
+    //Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
+    //add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
     //}
 }
 
@@ -183,6 +172,7 @@ IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
     }
 
     float t_diff = bezier_direction * dis;
+    Eigen::Vector3d curr_bezier_position = pow((1 - t), 3) * p_bezier[0] + 3 * pow((1 - t), 2) * t * p_bezier[1] + 3 * (1 - t) * pow(t, 2) * p_bezier[2] + pow(t, 3) * p_bezier[3];
 
     t += t_diff;
 
@@ -194,16 +184,39 @@ IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
     }
 
     Eigen::Vector3d new_position = pow((1 - t), 3) * p_bezier[0] + 3 * pow((1 - t), 2) * t * p_bezier[1] + 3 * (1 - t) * pow(t, 2) * p_bezier[2] + pow(t, 3) * p_bezier[3];
-    Eigen::Vector3d diff = new_position - current_position;
+    Eigen::Vector3d diff = new_position - curr_bezier_position;
+
+    //Eigen::Vector3d diff = new_position - current_position;
     MyTranslate(diff, true);
-    for (int i = 0; i < lines.rows(); i++) {
-        Eigen::VectorXd new_row(9);
-        new_row << lines(i, 0) - diff(0), lines(i, 1) - diff(1), lines(i, 2) - diff(2), lines(i, 3) - diff(0), lines(i, 4) - diff(1), lines(i, 5) - diff(2), lines(i, 6), lines(i, 7), lines(i, 8);
-        lines.row(i) = new_row.transpose();
-    }
+    current_position += diff;
+
+    //for (int i = 0; i < lines.rows(); i++) {
+    //    Eigen::VectorXd new_row(9);
+    //    new_row << lines(i, 0) - diff(0), lines(i, 1) - diff(1), lines(i, 2) - diff(2), lines(i, 3) - diff(0), lines(i, 4) - diff(1), lines(i, 5) - diff(2), lines(i, 6), lines(i, 7), lines(i, 8);
+    //    lines.row(i) = new_row.transpose();
+    //}
     center_dif += diff;
-    current_position = new_position;
+    //current_position = new_position;
 }
+
+//IGL_INLINE void igl::opengl::ViewerData::DrawCircle(double r)
+//{
+//    DrawEllipse(r, r);
+//}
+//
+// IGL_INLINE void igl::opengl::ViewerData::DrawEllipse(double a, double b)
+//{
+//    double const TWO_PI = 6.2831853071795865;
+//    int const NSTEPS = 100;
+//    double t = 0.;
+//    glBegin(GL_LINE_LOOP);
+//    for (int i = 0; i < (NSTEPS - 1); ++i)
+//    {
+//        glVertex2d(a * cos(t), b * sin(t));
+//        t += TWO_PI / NSTEPS;
+//    }
+//    glEnd();
+//}
 
 IGL_INLINE void igl::opengl::ViewerData::set_vertices(const Eigen::MatrixXd& _V)
 {

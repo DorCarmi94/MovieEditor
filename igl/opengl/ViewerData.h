@@ -19,7 +19,7 @@
 #include <Eigen/Core>
 #include <memory>
 #include <vector>
-#include <igl/AABB.h>
+//#include <igl/AABB.h>
 
 
 // Alec: This is a mesh class containing a variety of data types (normals,
@@ -307,12 +307,9 @@ public:
   int id;
   int shaderID;
 
-  // our additions
+  // our additions start
   int layer;
   float transperancy;
-
-  Eigen::MatrixXd reset_V;
-  Eigen::MatrixXi reset_F;
 
   //bezier
   float t;
@@ -322,9 +319,14 @@ public:
 
   Eigen::Vector3d center_dif;
 
+  float delay;
+  // our additions end
+
   IGL_INLINE void UpdateBezierCP(std::vector<Eigen::Vector3d> new_p_bezier);
   IGL_INLINE void bezier_movement(float dis);
   IGL_INLINE void init_mesh();
+  //IGL_INLINE void igl::opengl::ViewerData::DrawCircle(double r);
+  //IGL_INLINE void igl::opengl::ViewerData::DrawEllipse(double a, double b);
 
 
     // OpenGL representation of the mesh

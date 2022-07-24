@@ -116,10 +116,7 @@
 				break;
 				
 			case GLFW_KEY_SPACE:
-				if (scn->IsActive())
-					scn->Deactivate();
-				else
-					scn->Activate();
+				scn->SetAnimation();
 				break;
 
 			case GLFW_KEY_UP:
@@ -131,6 +128,8 @@
 				}
 				break;
 			case GLFW_KEY_DOWN:
+				scn->ShapeTransformation(scn->zTranslate, 3, 0);
+
 				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
 				//cout<< "down: "<<endl;
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->xRotate, -0.05f);
@@ -141,13 +140,15 @@
 				}
 				break;
 			case GLFW_KEY_LEFT:
-				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->yRotate, 0.05f);
+				scn->ShapeTransformation(scn->zTranslate, -3.0f, 0);
+
+				/*rndr->MoveCamera(rndr->CurrentCameraIdx, scn->yRotate, 0.05f);
 				objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
 				if (objIdx != 0)
 				{
 					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
 				}
-				break;
+				break;*/
 			case GLFW_KEY_RIGHT:
 				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
 				//cout<< "down: "<<endl;

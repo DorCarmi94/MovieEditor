@@ -43,6 +43,7 @@
 #include <igl/serialize.h>
 #include "../gl.h"
 #include <igl/opengl/glfw/renderer.h>
+#include <igl/get_seconds.h>
 
 
 // Internal global variables used for glfw event handling
@@ -72,9 +73,14 @@ namespace glfw
     next_shader_id(1),
 	isActive(false),
     run_time(5.0),
+    current_run_time(0.0),
+    display_runtime(5.0),
+    display_current_runtime(0),
+    copy_current_runtime(0),
     material_index(0),
     texture_index(0),
-    previous_data_index(0)
+    previous_data_index(0),
+    zoom_area(false)
 
   {
     data_list.front() = new ViewerData();
@@ -360,7 +366,11 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   }
 
   IGL_INLINE void Viewer::MoveObjects() {
-      data_list[1]->bezier_movement(0.01);
+      for (int i = 7; i < data_list.size(); i++) {
+          if (display_current_runtime > data_list[i]->delay) {
+              data_list[i]->bezier_movement(0.01);
+          }
+      }
   }
 
   // Material
@@ -454,6 +464,14 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
       }
   }
 
+  IGL_INLINE bool Viewer::SetAnimation() {
+        isActive = !isActive;
+        if (isActive) {
+            current_run_time = igl::get_seconds();
+            copy_current_runtime = display_current_runtime;
+        }
+        return isActive;
+    }
 
 
 
@@ -715,10 +733,10 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
           data()->show_lines = 0;
           data()->show_overlay = 0xFF;
           data()->line_width = 5.0f;
-          p_bezier[0] = Eigen::Vector3d(18.8, -26.6, 0);
-          p_bezier[1] = Eigen::Vector3d(2.6, 12.9, 0);
-          p_bezier[2] = Eigen::Vector3d(-2, -15.6, 0);
-          p_bezier[3] = Eigen::Vector3d(29.5, 33, 0);
+          p_bezier[0] = Eigen::Vector3d(-2, -3, 0);
+          p_bezier[1] = Eigen::Vector3d(-1, 0, 0);
+          p_bezier[2] = Eigen::Vector3d(1, 0, 0);
+          p_bezier[3] = Eigen::Vector3d(2, -3, 0);
           Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
 
           for (float i = 0.1; i < 1; i += 0.01)
@@ -800,8 +818,11 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
         if (button == 1)
         {
-            if (selected_data_index > 0) {
+            if (selected_data_index > 5) {
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
+                data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(1, 0, 0), yrel / 100.0);
+
+                data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(0, 1, 0), xrel / 100.0);
             }
             else
             {
@@ -833,12 +854,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                 else
                 {
                     MyTranslate(Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff,0),0);
-                    //data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
-                    //if (selected_data_index > 1 && selected_data_index < 6) {
-                    //    data_list[previous_data_index]->p_bezier[selected_data_index - 2] += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
-                    //    std::cout << "previous_data_index: " << previous_data_index << " selected_data_index: " << selected_data_index << std::endl;
-                    //    UpdateBezierInfo(previous_data_index);
-                    //}
                 }
                 
             }
@@ -900,6 +915,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         }
 
     }
+
 
     bool Viewer::Picking(unsigned char data[4], int newViewportIndx)
     {

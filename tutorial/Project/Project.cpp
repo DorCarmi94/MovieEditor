@@ -1,5 +1,8 @@
 #include "Project.h"
 #include <iostream>
+#include <igl/get_seconds.h>
+#include<windows.h>
+
 
 
 static void printMat(const Eigen::Matrix4d & mat)
@@ -24,18 +27,13 @@ Project::Project()
 
 void Project::Init()
 {
-	unsigned int texIDs[3] = {
-		 AddTexture("../../textures/cubemaps/Daylight Box_", 3),
-		 AddTexture("../../textures/box0.bmp", 2),
-	     AddTexture("../../textures/plane.png", 2)
-	};
-
-	unsigned int slots[3] = { 0 , 1 };
+	AddTexture("../../textures/cubemaps/Daylight Box_", 3);
+	AddTexture("../../textures/box0.bmp", 2);
+	AddTexture("../../textures/plane.png", 2);
 
 	AddShader("../../shaders/pickingShader");
 	AddShader("../../shaders/cubemapShader");
 	AddShader("../../shaders/basicShader");
-	AddShader("../../shaders/pickingShader");
 
 	for (int i = 0; i < 3; i++) {
 		AddMaterial(texIDs + i, slots + i, 1);
@@ -46,23 +44,20 @@ void Project::Init()
 	SetShapeShader(shapesCounter, 1);
 	SetShapeMaterial(shapesCounter, 0);
 	selected_data_index = 0;
-	float s = 60;
+	float s = 100;
 	ShapeTransformation(scaleAll, s, 0);
 	SetShapeStatic(0);
 	//skybox end
-
+	
 	//bezier start
 	shapesCounter++;
-	AddShape(Bezier, -1, LINES);
+	AddShape(Bezier, -1, LINES, 1);
 	SetShapeShader(shapesCounter, 2);
 	SetShapeMaterial(shapesCounter, 2);
 
-	selected_data_index = 1;
-	//ShapeTransformation(scaleAll, 0.1, 0);
-
 	for (int i = 2; i < 6; i++) {
 		shapesCounter++;
-		AddShape(Sphere, -1, TRIANGLES);
+		AddShape(Sphere, -1, TRIANGLES, 1);
 		SetShapeShader(shapesCounter, 2);
 		SetShapeMaterial(shapesCounter, 1);
 		selected_data_index = shapesCounter;
@@ -70,10 +65,16 @@ void Project::Init()
 	}
 	shapesCounter++;
 	AddShape(Axis, -1, LINES, 1);
+//<<<<<<< HEAD
 	SetShapeShader(shapesCounter, 2);
 	SetShapeMaterial(shapesCounter, 2);
 	SetShapeStatic(shapesCounter);
 
+//=======
+//	SetShapeShader(6, 2);
+//	SetShapeMaterial(6, 2);
+//	SetShapeStatic(6);
+//>>>>>>> rotation
 	//bezier end
 	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES);
@@ -82,10 +83,9 @@ void Project::Init()
 
 	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES);
+//<<<<<<< HEAD
 	SetShapeShader(shapesCounter, 2);
 	SetShapeMaterial(shapesCounter, 1);
-
-	
 
 	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES,2);
@@ -98,16 +98,9 @@ void Project::Init()
 	SetShapeShader(shapesCounter, 2);
 	SetShapeMaterial(shapesCounter, 1);
 
-
-
-	std::vector<Eigen::Vector3d> p_bezier;
-	p_bezier.push_back(Eigen::Vector3d(18.8, -26.6, 0));
-	p_bezier.push_back(Eigen::Vector3d(2.6, 12.9, 0));
-	p_bezier.push_back(Eigen::Vector3d(-2, -15.6, 0));
-	p_bezier.push_back(Eigen::Vector3d(29.5, 33, 0));
-	data_list[7]->UpdateBezierCP(p_bezier);
-	//UpdateBezierInfo();
-	
+//	SetShapeShader(8, 2);
+//	SetShapeMaterial(8, 1);;
+//>>>>>>> rotation
 
 }
 
@@ -147,9 +140,16 @@ void Project::WhenTranslate()
 void Project::Animate() {
 	if (isActive)
 	{
-		//if (selected_data_index > 0)
-			//MoveObjects();
-			//data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
+		if (display_current_runtime < display_runtime) {
+			MoveObjects();
+			double time_passed = igl::get_seconds() - current_run_time;
+			display_current_runtime = copy_current_runtime + time_passed;
+		}
+		else {
+			Deactivate();
+			current_run_time = 0;
+			display_current_runtime = 0;
+		}
 	}
 }
 
