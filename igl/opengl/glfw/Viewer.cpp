@@ -79,7 +79,8 @@ namespace glfw
     copy_current_runtime(0),
     material_index(0),
     texture_index(0),
-    previous_data_index(0)
+    previous_data_index(0),
+    zoom_area(false)
 
   {
     data_list.front() = new ViewerData();
@@ -338,7 +339,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
       int shape_indx = this->AddShapeFromFile(fname.c_str(), -1, TRIANGLES);
 
-      SetShapeShader(shape_indx, 0);
+      SetShapeShader(shape_indx, 2);
       SetShapeMaterial(shape_indx, 1);
 
       selected_data_index = shape_indx;
@@ -366,7 +367,9 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
   IGL_INLINE void Viewer::MoveObjects() {
       for (int i = 7; i < data_list.size(); i++) {
-          data_list[i]->bezier_movement(0.01);
+          if (display_current_runtime > data_list[i]->delay) {
+              data_list[i]->bezier_movement(0.01);
+          }
       }
   }
 
@@ -915,6 +918,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         }
 
     }
+
 
     bool Viewer::Picking(unsigned char data[4], int newViewportIndx)
     {

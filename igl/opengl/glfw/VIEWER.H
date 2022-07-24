@@ -187,7 +187,6 @@ public:
     float display_current_runtime;
     float copy_current_runtime;
 
-
     unsigned int texIDs[100];
     unsigned int slots[100];
     unsigned int texture_index;
@@ -197,6 +196,7 @@ public:
 
     int previous_data_index;
 
+    bool zoom_area;
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;

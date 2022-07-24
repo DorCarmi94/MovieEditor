@@ -26,18 +26,13 @@ Project::Project()
 
 void Project::Init()
 {
-	unsigned int texIDs[3] = {
-		 AddTexture("../../textures/cubemaps/Daylight Box_", 3),
-		 AddTexture("../../textures/box0.bmp", 2),
-	     AddTexture("../../textures/plane.png", 2)
-	};
-
-	unsigned int slots[3] = { 0 , 1 };
+	AddTexture("../../textures/cubemaps/Daylight Box_", 3);
+	AddTexture("../../textures/box0.bmp", 2);
+	AddTexture("../../textures/plane.png", 2);
 
 	AddShader("../../shaders/pickingShader");
 	AddShader("../../shaders/cubemapShader");
 	AddShader("../../shaders/basicShader");
-	AddShader("../../shaders/pickingShader");
 
 	for (int i = 0; i < 3; i++) {
 		AddMaterial(texIDs + i, slots + i, 1);
@@ -52,14 +47,11 @@ void Project::Init()
 	ShapeTransformation(scaleAll, s, 0);
 	SetShapeStatic(0);
 	//skybox end
-
+	
 	//bezier start
 	AddShape(Bezier, -1, LINES);
 	SetShapeShader(1, 2);
 	SetShapeMaterial(1, 2);
-
-	selected_data_index = 1;
-	//ShapeTransformation(scaleAll, 0.1, 0);
 
 	for (int i = 2; i < 6; i++) {
 		AddShape(Sphere, -1, TRIANGLES);
@@ -73,7 +65,6 @@ void Project::Init()
 	SetShapeShader(6, 2);
 	SetShapeMaterial(6, 2);
 	SetShapeStatic(6);
-
 	//bezier end
 
 	AddShape(Cube, -1, TRIANGLES);
@@ -82,16 +73,7 @@ void Project::Init()
 
 	AddShape(Cube, -1, TRIANGLES);
 	SetShapeShader(8, 2);
-	SetShapeMaterial(8, 1);
-
-	//std::vector<Eigen::Vector3d> p_bezier;
-	//p_bezier.push_back(Eigen::Vector3d(18.8, -26.6, 0));
-	//p_bezier.push_back(Eigen::Vector3d(2.6, 12.9, 0));
-	//p_bezier.push_back(Eigen::Vector3d(-2, -15.6, 0));
-	//p_bezier.push_back(Eigen::Vector3d(29.5, 33, 0));
-	//data_list[7]->UpdateBezierCP(p_bezier);
-	//UpdateBezierInfo();
-
+	SetShapeMaterial(8, 1);;
 
 }
 

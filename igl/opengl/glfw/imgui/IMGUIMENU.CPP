@@ -223,9 +223,9 @@ namespace igl
                             {
 
                                 viewer->parents.push_back(-1);
-                                viewer->SetShapeViewport(viewer->selected_data_index, 0);
+                                /*viewer->SetShapeViewport(viewer->selected_data_index, 0);
                                 viewer->SetShapeShader(viewer->selected_data_index, 2);
-                                viewer->SetShapeMaterial(viewer->selected_data_index, 0);
+                                viewer->SetShapeMaterial(viewer->selected_data_index, 1);*/
                                 //viewer->data_list.back()->set_visible(false, 1);
                                 //viewer->data_list.back()->set_visible(true, 2);
                                 viewer->data_list.back()->UnHide();
@@ -251,14 +251,16 @@ namespace igl
                         //todo seems like selected_data_index reverts back to 0, needs to be fixed
                         float w = ImGui::GetContentRegionAvailWidth();
                         float p = ImGui::GetStyle().FramePadding.x;
-                        if (ImGui::Button("change##Material", ImVec2(-1, 0)))
-                        {
-                            int saved_texture_Indx = viewer->texture_index;
-                            viewer->open_dialog_load_material();
-                            if (viewer->texture_index > saved_texture_Indx)
+                        if (viewer->selected_data_index > 6) {
+                            if (ImGui::Button("change##Material", ImVec2(-1, 0)))
                             {
-                                int mtr_idx = viewer->AddMaterial(viewer->texIDs + viewer->material_index, viewer->slots + viewer->material_index, 1);
-                                viewer->SetShapeMaterial(viewer->selected_data_index, mtr_idx);
+                                int saved_texture_Indx = viewer->texture_index;
+                                viewer->open_dialog_load_material();
+                                if (viewer->texture_index > saved_texture_Indx)
+                                {
+                                    int mtr_idx = viewer->AddMaterial(viewer->texIDs + viewer->material_index, viewer->slots + viewer->material_index, 1);
+                                    viewer->SetShapeMaterial(viewer->selected_data_index, mtr_idx);
+                                }
                             }
                         }
 
@@ -365,6 +367,18 @@ namespace igl
                         ImGui::PopItemWidth();
                         ImGui::SliderFloat("Current Run Time", &viewer->display_current_runtime, 0, viewer->display_runtime);
 
+                        if (viewer->selected_data_index > 6) {
+                            ImGui::SliderFloat("Shape Delay", &viewer->data_list[viewer->selected_data_index]->delay, 0, viewer->display_runtime);
+                        }
+
+
+
+                    }
+
+                    // zoom options
+                    if (ImGui::CollapsingHeader("zoom on area", ImGuiTreeNodeFlags_DefaultOpen))
+                    {
+                        ImGui::Checkbox("zoom##zoom on area", &(viewer->zoom_area));
                     }
 
                     // Viewing options

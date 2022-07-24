@@ -20,7 +20,7 @@ void main()
 	vec4  fog_colour = vec4(0.4, 0.4, 0.4, 1.0);
 
 	// // Calculate fog
-	float dist = sqrt((position0.x * position0.x) + (position0.y * position0.y) + (position0.z * position0.z));//length(texCoord0.xyz);
+	float dist = length(position0.xyz);
 	float fog_factor = (fog_maxdist - dist) / (fog_maxdist - fog_mindist);
 	fog_factor = clamp(fog_factor, 0.0, 1.0);
 

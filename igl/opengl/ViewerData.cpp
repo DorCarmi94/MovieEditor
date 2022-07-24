@@ -21,7 +21,6 @@
 
 #include <iostream>
 
-
 IGL_INLINE igl::opengl::ViewerData::ViewerData()
 : dirty(MeshGL::DIRTY_ALL),
   show_faces        (~unsigned(0)),
@@ -50,7 +49,8 @@ IGL_INLINE igl::opengl::ViewerData::ViewerData()
   transperancy(1),
   t(0),
   bezier_direction(-1),
-  current_position(0, 0, 0)
+  current_position(0, 0, 0),
+  delay(0.0)
 
 {
   clear();
@@ -117,8 +117,6 @@ IGL_INLINE void igl::opengl::ViewerData::set_mesh(
 }
 
 IGL_INLINE void igl::opengl::ViewerData::init_mesh() {
-    reset_V = V;//todo maybe remove
-    reset_F = F;
     center_dif = Eigen::Vector3d(0, 0, 0);
   
     //float LO = -5;
@@ -200,6 +198,25 @@ IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
     center_dif += diff;
     //current_position = new_position;
 }
+
+//IGL_INLINE void igl::opengl::ViewerData::DrawCircle(double r)
+//{
+//    DrawEllipse(r, r);
+//}
+//
+// IGL_INLINE void igl::opengl::ViewerData::DrawEllipse(double a, double b)
+//{
+//    double const TWO_PI = 6.2831853071795865;
+//    int const NSTEPS = 100;
+//    double t = 0.;
+//    glBegin(GL_LINE_LOOP);
+//    for (int i = 0; i < (NSTEPS - 1); ++i)
+//    {
+//        glVertex2d(a * cos(t), b * sin(t));
+//        t += TWO_PI / NSTEPS;
+//    }
+//    glEnd();
+//}
 
 IGL_INLINE void igl::opengl::ViewerData::set_vertices(const Eigen::MatrixXd& _V)
 {
