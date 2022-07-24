@@ -115,10 +115,7 @@
 				break;
 				
 			case GLFW_KEY_SPACE:
-				if (scn->IsActive())
-					scn->Deactivate();
-				else
-					scn->Activate();
+				scn->SetAnimation();
 				break;
 
 			case GLFW_KEY_UP:

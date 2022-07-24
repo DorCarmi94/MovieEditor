@@ -154,7 +154,7 @@ namespace glfw
     IGL_INLINE size_t mesh_index(const int id) const;
 
 	Eigen::Matrix4d CalcParentsTrans(int indx);
-	inline bool SetAnimation() { return isActive = !isActive; }
+    IGL_INLINE bool SetAnimation();
     inline  bool  IsActive() const { return isActive; }
     inline void Activate() { isActive = true; }
     inline void Deactivate() { isActive = false; }
@@ -181,12 +181,20 @@ public:
     unsigned int staticScene;
 
     //our additions
-    float run_time;
+    double run_time;
+    double current_run_time;
+    float display_runtime;
+    float display_current_runtime;
+    float copy_current_runtime;
+
+
     unsigned int texIDs[100];
     unsigned int slots[100];
     unsigned int texture_index;
     unsigned int material_index;
+
     int layers;
+
     int previous_data_index;
 
 

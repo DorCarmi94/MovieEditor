@@ -361,9 +361,10 @@ namespace igl
                             viewer->SetAnimation();
                         }
                         ImGui::PushItemWidth(80 * menu_scaling());
-                        ImGui::DragFloat("Run Time", &(viewer->run_time), 0.05f, 1.0f, 90.0f);
+                        ImGui::DragFloat("Animation Run Time", &(viewer->display_runtime), 0.05f, 1.0f, 90.0f);
                         ImGui::PopItemWidth();
-
+                        ImGui::SameLine(0, p);
+                        ImGui::SliderFloat("Current Run Time", &viewer->display_current_runtime, 0, viewer->display_runtime);
                     }
 
                     // Viewing options

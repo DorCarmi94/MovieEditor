@@ -42,6 +42,8 @@
 #include <igl/unproject.h>
 #include <igl/serialize.h>
 #include "../gl.h"
+#include <igl/get_seconds.h>
+
 
 
 // Internal global variables used for glfw event handling
@@ -71,6 +73,10 @@ namespace glfw
     next_shader_id(1),
 	isActive(false),
     run_time(5.0),
+    current_run_time(0.0),
+    display_runtime(5.0),
+    display_current_runtime(0),
+    copy_current_runtime(0),
     material_index(0),
     texture_index(0),
     previous_data_index(0)
@@ -455,6 +461,15 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
       }
   }
 
+  IGL_INLINE bool Viewer::SetAnimation() {
+        isActive = !isActive;
+        if (isActive) {
+            current_run_time = igl::get_seconds();
+            std::cout << current_run_time << std::endl;
+            copy_current_runtime = display_current_runtime;
+        }
+        return isActive;
+    }
 
 
 

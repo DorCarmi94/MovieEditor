@@ -1,5 +1,8 @@
 #include "Project.h"
 #include <iostream>
+#include <igl/get_seconds.h>
+#include<windows.h>
+
 
 
 static void printMat(const Eigen::Matrix4d & mat)
@@ -128,9 +131,16 @@ void Project::WhenTranslate()
 void Project::Animate() {
 	if (isActive)
 	{
-		//if (selected_data_index > 0)
-		MoveObjects();
-			//data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
+		if (display_current_runtime < display_runtime) {
+			MoveObjects();
+			double time_passed = igl::get_seconds() - current_run_time;
+			display_current_runtime = copy_current_runtime + time_passed;
+		}
+		else {
+			Deactivate();
+			current_run_time = 0;
+			display_current_runtime = 0;
+		}
 	}
 }
 
