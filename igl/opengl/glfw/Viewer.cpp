@@ -359,7 +359,9 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   }
 
   IGL_INLINE void Viewer::MoveObjects() {
-      data_list[1]->bezier_movement(0.01);
+      for (int i = 7; i < data_list.size(); i++) {
+          data_list[i]->bezier_movement(0.01);
+      }
   }
 
   // Material
@@ -714,10 +716,10 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
           data()->show_lines = 0;
           data()->show_overlay = 0xFF;
           data()->line_width = 5.0f;
-          p_bezier[0] = Eigen::Vector3d(18.8, -26.6, 0);
-          p_bezier[1] = Eigen::Vector3d(2.6, 12.9, 0);
-          p_bezier[2] = Eigen::Vector3d(-2, -15.6, 0);
-          p_bezier[3] = Eigen::Vector3d(29.5, 33, 0);
+          p_bezier[0] = Eigen::Vector3d(-2, -3, 0);
+          p_bezier[1] = Eigen::Vector3d(-1, 0, 0);
+          p_bezier[2] = Eigen::Vector3d(1, 0, 0);
+          p_bezier[3] = Eigen::Vector3d(2, -3, 0);
           Eigen::Vector3d curr_pos = Eigen::Vector3d(0, 0, 0);
 
           for (float i = 0.1; i < 1; i += 0.01)
@@ -805,7 +807,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
             //     WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
             // }
             if (selected_data_index > 5) {
-                std::cout << "11111" << std::endl;
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
                 data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(1, 0, 0), yrel / 100.0);
 
@@ -813,7 +814,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
             }
             else
             {
-                std::cout << "2222222" << std::endl;
                 MyRotate(Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0), 0);
             }
         }

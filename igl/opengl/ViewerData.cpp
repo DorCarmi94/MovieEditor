@@ -174,6 +174,7 @@ IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
     }
 
     float t_diff = bezier_direction * dis;
+    Eigen::Vector3d curr_bezier_position = pow((1 - t), 3) * p_bezier[0] + 3 * pow((1 - t), 2) * t * p_bezier[1] + 3 * (1 - t) * pow(t, 2) * p_bezier[2] + pow(t, 3) * p_bezier[3];
 
     t += t_diff;
 
@@ -185,15 +186,19 @@ IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
     }
 
     Eigen::Vector3d new_position = pow((1 - t), 3) * p_bezier[0] + 3 * pow((1 - t), 2) * t * p_bezier[1] + 3 * (1 - t) * pow(t, 2) * p_bezier[2] + pow(t, 3) * p_bezier[3];
-    Eigen::Vector3d diff = new_position - current_position;
+    Eigen::Vector3d diff = new_position - curr_bezier_position;
+
+    //Eigen::Vector3d diff = new_position - current_position;
     MyTranslate(diff, true);
-    for (int i = 0; i < lines.rows(); i++) {
-        Eigen::VectorXd new_row(9);
-        new_row << lines(i, 0) - diff(0), lines(i, 1) - diff(1), lines(i, 2) - diff(2), lines(i, 3) - diff(0), lines(i, 4) - diff(1), lines(i, 5) - diff(2), lines(i, 6), lines(i, 7), lines(i, 8);
-        lines.row(i) = new_row.transpose();
-    }
+    current_position += diff;
+
+    //for (int i = 0; i < lines.rows(); i++) {
+    //    Eigen::VectorXd new_row(9);
+    //    new_row << lines(i, 0) - diff(0), lines(i, 1) - diff(1), lines(i, 2) - diff(2), lines(i, 3) - diff(0), lines(i, 4) - diff(1), lines(i, 5) - diff(2), lines(i, 6), lines(i, 7), lines(i, 8);
+    //    lines.row(i) = new_row.transpose();
+    //}
     center_dif += diff;
-    current_position = new_position;
+    //current_position = new_position;
 }
 
 IGL_INLINE void igl::opengl::ViewerData::set_vertices(const Eigen::MatrixXd& _V)

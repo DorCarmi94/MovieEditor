@@ -81,12 +81,12 @@ void Project::Init()
 	SetShapeShader(8, 2);
 	SetShapeMaterial(8, 1);
 
-	std::vector<Eigen::Vector3d> p_bezier;
-	p_bezier.push_back(Eigen::Vector3d(18.8, -26.6, 0));
-	p_bezier.push_back(Eigen::Vector3d(2.6, 12.9, 0));
-	p_bezier.push_back(Eigen::Vector3d(-2, -15.6, 0));
-	p_bezier.push_back(Eigen::Vector3d(29.5, 33, 0));
-	data_list[7]->UpdateBezierCP(p_bezier);
+	//std::vector<Eigen::Vector3d> p_bezier;
+	//p_bezier.push_back(Eigen::Vector3d(18.8, -26.6, 0));
+	//p_bezier.push_back(Eigen::Vector3d(2.6, 12.9, 0));
+	//p_bezier.push_back(Eigen::Vector3d(-2, -15.6, 0));
+	//p_bezier.push_back(Eigen::Vector3d(29.5, 33, 0));
+	//data_list[7]->UpdateBezierCP(p_bezier);
 	//UpdateBezierInfo();
 
 
@@ -129,7 +129,7 @@ void Project::Animate() {
 	if (isActive)
 	{
 		//if (selected_data_index > 0)
-			//MoveObjects();
+		MoveObjects();
 			//data()->MyRotate(Eigen::Vector3d(0, 1, 0), 0.01);
 	}
 }
