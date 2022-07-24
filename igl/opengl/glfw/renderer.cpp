@@ -36,7 +36,7 @@ Renderer::Renderer(float angle, float relationWH, float near, float far)
     callback_key_up_data = nullptr;
     glLineWidth(5);
     cameras.push_back(new igl::opengl::Camera(angle, relationWH, near, far));
-    isPressed = false;
+    isPressed = true;
     isMany = false;
     xold = 0;
     yold = 0;
@@ -125,7 +125,7 @@ IGL_INLINE void Renderer::draw_by_info(int info_index){
         else
             Clear(info->Clear_RGBA.x(), info->Clear_RGBA.y(), info->Clear_RGBA.z(), info->Clear_RGBA.w(),info->flags);
     }
-
+    std::cout << "draw info index: " << info_index << std::endl;
     scn->Draw(info->shaderIndx, Proj, View, info->viewportIndx, info->flags,info->property_id);
 }
 
@@ -155,7 +155,7 @@ IGL_INLINE void Renderer::draw( GLFWwindow* window)
     int indx = 0;
     for (auto& info : drawInfos)
     {
-        if (!(info->flags & (inAction | inAction2)) || ((info->flags & inAction2) && !(info->flags & stencilTest) && isPressed && !isPicked) || ((info->flags & inAction2) && (info->flags & stencilTest)  && isPicked ))
+        if (!(info->flags & (inAction | inAction2)) || ((info->flags & inAction2) && !(info->flags & stencilTest) && isPressed /*&& !isPicked*/) || ((info->flags & inAction2) && (info->flags & stencilTest)  && isPicked ))
             draw_by_info(indx);
         indx++;
     }
@@ -384,6 +384,12 @@ IGL_INLINE void Renderer::post_resize(GLFWwindow* window, int w, int h)
 		}
 	}
 
+void Renderer::SwitchCameraIdx()
+{
+    this->CurrentCameraIdx = (this->CurrentCameraIdx + 1) % cameras.size();
+    drawInfos[0]->cameraIndx = CurrentCameraIdx;
+    drawInfos[1]->cameraIndx = CurrentCameraIdx;
+}
 
 void Renderer::MoveCamera(int cameraIndx, int type, float amt)
 {
@@ -494,6 +500,11 @@ void Renderer::SetBuffers()
     SwapDrawInfo(2, 3);
 }
 
+void Renderer::ChangeCamera(int drawinfo, int cameraIndx)
+{
+    this->drawInfos[drawinfo]->cameraIndx = cameraIndx;
+}
+
 IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>xViewport, std::list<int>yViewport,int pickingBits,igl::opengl::glfw::imgui::ImGuiMenu *_menu)
 {
     scn = scene;
@@ -504,7 +515,7 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
     buffers.push_back(new igl::opengl::DrawBuffer());
     maxPixX = viewport.z();
     maxPixY = viewport.w();
-    xViewport.push_front(0);
+    xViewport.push_front(400);
     yViewport.push_front(0);
     std::list<int>::iterator xit = xViewport.begin();
     int indx = 0;

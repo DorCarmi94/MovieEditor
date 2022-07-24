@@ -12,6 +12,9 @@
 #define IGL_OPENGL_4
 #endif
 
+class Renderer;
+
+
 #include "../../igl_inline.h"
 #include "../MeshGL.h"
 
@@ -19,6 +22,8 @@
 #include "ViewerPlugin.h"
 #include "igl/opengl/Movable.h"
 #include "igl/opengl/glfw/Material.h"
+
+
 
 
 #include <Eigen/Core>
@@ -189,6 +194,14 @@ public:
     int layers;
     int previous_data_index;
 
+    int shapesCounter = 0;
+
+    void AddCameraShape();
+
+    Renderer* rndr;
+    std::map<int, int> objectIdxToCameraIdx;
+    std::map<int, int> cameraToObjectIdx;
+    
 
     Shader* overlay_shader;
     Shader* overlay_point_shader;

@@ -1,4 +1,10 @@
 #pragma once
+#ifndef RENDERER_H
+#define RENDERER_H
+
+
+
+
 #include <igl/igl_inline.h>
 #include <vector>
 #include <functional>
@@ -95,6 +101,9 @@ public:
 	void* callback_key_down_data;
 	void* callback_key_up_data;
 
+    int CurrentCameraIdx = 0;
+    void SwitchCameraIdx();
+
 // Callbacks
 //	 double Picking(double x, double y);
 	 inline void Animate() { scn->Animate(); };
@@ -131,6 +140,8 @@ public:
     inline void BindViewport2D(int indx) { drawInfos[indx]->SetFlags(is2D); }
 
     void MoveCamera(int cameraIndx, int type, float amt);
+
+    void ChangeCamera(int drawinfo, int cameraIndx);
 
     bool Picking_2(int x, int y, int view_port_index);
 
@@ -182,12 +193,12 @@ public:
     inline bool IsPicked() { return isPicked; }
     inline bool IsMany() const { return isMany; }
     void Init(igl::opengl::glfw::Viewer *scene, std::list<int> xViewport, std::list<int> yViewport, int pickingBits,igl::opengl::glfw::imgui::ImGuiMenu *_menu);
-
+    std::vector<igl::opengl::Camera*> cameras;
 
 private:
     // Stores all the viewing options
 //    std::vector<igl::opengl::ViewerCore> core_list;
-    std::vector<igl::opengl::Camera*> cameras;
+    
     igl::opengl::glfw::Viewer* scn;
     std::vector<Eigen::Vector4i> viewports;
     std::vector<DrawInfo *> drawInfos;
@@ -218,4 +229,4 @@ private:
 
     void SwapDrawInfo(int indx1, int indx2);
 };
-
+#endif // !RENDERER_H

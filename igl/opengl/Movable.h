@@ -27,6 +27,9 @@ public:
 	void ZeroTrans();
 
 	Eigen::Matrix3d GetRotation() const{ return Tout.rotation().matrix(); }
+	Eigen::Vector3d GetTranslation() const{ return Tout.translation(); }
+
+	void SetTranslation(Eigen::Vector3d amt) {Tout.pretranslate(amt);}
     virtual ~Movable() {}
 private:
 

@@ -15,6 +15,7 @@ static void printMat(const Eigen::Matrix4d & mat)
 
 Project::Project()
 {
+	objectIdxToCameraIdx = std::map<int, int>();
 }
 
 //Project::Project(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
@@ -41,9 +42,9 @@ void Project::Init()
 	}
 
 	//skybox start
-	AddShape(Cube, -2, TRIANGLES);
-	SetShapeShader(0, 1);
-	SetShapeMaterial(0, 0);
+	AddShape(Cube, -2, TRIANGLES);	
+	SetShapeShader(shapesCounter, 1);
+	SetShapeMaterial(shapesCounter, 0);
 	selected_data_index = 0;
 	float s = 60;
 	ShapeTransformation(scaleAll, s, 0);
@@ -51,35 +52,53 @@ void Project::Init()
 	//skybox end
 
 	//bezier start
+	shapesCounter++;
 	AddShape(Bezier, -1, LINES);
-	SetShapeShader(1, 2);
-	SetShapeMaterial(1, 2);
+	SetShapeShader(shapesCounter, 2);
+	SetShapeMaterial(shapesCounter, 2);
 
 	selected_data_index = 1;
 	//ShapeTransformation(scaleAll, 0.1, 0);
 
 	for (int i = 2; i < 6; i++) {
+		shapesCounter++;
 		AddShape(Sphere, -1, TRIANGLES);
-		SetShapeShader(i, 2);
-		SetShapeMaterial(i, 1);
-		selected_data_index = i;
+		SetShapeShader(shapesCounter, 2);
+		SetShapeMaterial(shapesCounter, 1);
+		selected_data_index = shapesCounter;
 		ShapeTransformation(scaleAll, 0.25, 0);
 	}
-
+	shapesCounter++;
 	AddShape(Axis, -1, LINES, 1);
-	SetShapeShader(6, 2);
-	SetShapeMaterial(6, 2);
-	SetShapeStatic(6);
+	SetShapeShader(shapesCounter, 2);
+	SetShapeMaterial(shapesCounter, 2);
+	SetShapeStatic(shapesCounter);
 
 	//bezier end
-
+	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES);
-	SetShapeShader(7, 2);
-	SetShapeMaterial(7, 1);
+	SetShapeShader(shapesCounter, 2);
+	SetShapeMaterial(shapesCounter, 1);
 
+	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES);
-	SetShapeShader(8, 2);
-	SetShapeMaterial(8, 1);
+	SetShapeShader(shapesCounter, 2);
+	SetShapeMaterial(shapesCounter, 1);
+
+	
+
+	shapesCounter++;
+	AddShape(Cube, -1, TRIANGLES,2);
+	SetShapeShader(shapesCounter, 2);
+	SetShapeMaterial(shapesCounter, 1);
+
+
+	shapesCounter++;
+	AddShape(Cube, -1, TRIANGLES,1);
+	SetShapeShader(shapesCounter, 2);
+	SetShapeMaterial(shapesCounter, 1);
+
+
 
 	std::vector<Eigen::Vector3d> p_bezier;
 	p_bezier.push_back(Eigen::Vector3d(18.8, -26.6, 0));
@@ -88,7 +107,7 @@ void Project::Init()
 	p_bezier.push_back(Eigen::Vector3d(29.5, 33, 0));
 	data_list[7]->UpdateBezierCP(p_bezier);
 	//UpdateBezierInfo();
-
+	
 
 }
 

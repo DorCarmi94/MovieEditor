@@ -42,6 +42,7 @@
 #include <igl/unproject.h>
 #include <igl/serialize.h>
 #include "../gl.h"
+#include <igl/opengl/glfw/renderer.h>
 
 
 // Internal global variables used for glfw event handling
@@ -332,7 +333,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
       int shape_indx = this->AddShapeFromFile(fname.c_str(), -1, TRIANGLES);
 
-      SetShapeShader(shape_indx, 0);
+      SetShapeShader(shape_indx,2);
       SetShapeMaterial(shape_indx, 1);
 
       selected_data_index = shape_indx;
@@ -601,7 +602,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                     if (flgs & 16384)
                     {   //stencil
                         Eigen::Affine3f scale_mat = Eigen::Affine3f::Identity();
-                        scale_mat.scale(Eigen::Vector3f(2.1f, 2.1f, 2.1f));
+                        scale_mat.scale(Eigen::Vector3f(1.1f, 1.1f, 1.1f));
                         Update(Proj, View , Model * scale_mat.matrix(), 0,i);
                     }
                     else
@@ -799,11 +800,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
         if (button == 1)
         {
-            // for (int pShape : pShapes)
-            // {
-            //     selected_data_index = pShape;
-            //     WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
-            // }
             if (selected_data_index > 0) {
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
             }
@@ -821,6 +817,14 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                 if (selected_data_index > 0) {
                     WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
                     data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                    if (objectIdxToCameraIdx.count(selected_data_index))
+                    {
+                        rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xTranslate, -xrel / movCoeff);
+                        rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yTranslate, -yrel / movCoeff);
+                    }
+
+
+
                     if (selected_data_index > 1 && selected_data_index < 6) {
                         data_list[previous_data_index]->p_bezier[selected_data_index - 2] += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
                         UpdateBezierInfo(previous_data_index);
@@ -913,6 +917,9 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                 // pShapes.push_back(i);
                 selected_data_index = i;
                 //SetShapeShader(i, 1);
+                std::cout << data_list[selected_data_index]->GetTranslation().x() << std::endl;
+                std::cout << data_list[selected_data_index]->GetTranslation().y() << std::endl;
+                std::cout << data_list[selected_data_index]->GetTranslation().z() << std::endl;
                 if (selected_data_index < 6) {
                     UpdateBezierInfo(previous_data_index);
                 }
@@ -929,6 +936,8 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
     }
 
+    
+
     void Viewer::WhenTranslate( const Eigen::Matrix4d& preMat, float dx, float dy)
     {
         Movable* obj;
@@ -938,6 +947,25 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         obj->TranslateInSystem(preMat.block<3, 3>(0, 0), Eigen::Vector3d(dx, 0, 0));
         obj->TranslateInSystem(preMat.block<3, 3>(0, 0), Eigen::Vector3d(0, dy, 0));
         WhenTranslate(dx,dy);
+
+        
+    }
+    
+    void Viewer::AddCameraShape()
+    {
+        const int DISPLAY_WIDTH1 = 1200;
+        const int DISPLAY_HEIGHT1 = 800;
+        const float CAMERA_ANGLE1 = 45.0f;
+        const float NEAR1 = 1.0f;
+        const float FAR1 = 300.0f;
+        shapesCounter++;
+        AddShape(Cube, -1, TRIANGLES);
+        SetShapeShader(shapesCounter, 2);
+        SetShapeMaterial(shapesCounter, 1);
+        rndr->AddCamera(Eigen::Vector3d(0, 0, 0), CAMERA_ANGLE1, (float)DISPLAY_WIDTH1 / (float)DISPLAY_HEIGHT1 / 2, NEAR1, FAR1, 2);
+        
+        
+        
     }
 
     void Viewer::WhenRotate(const Eigen::Matrix4d& preMat, float dx, float dy)
