@@ -361,7 +361,7 @@ namespace igl
                         ImGui::SameLine(0, p);
                         if (ImGui::Button("Switch Camera##Cameras", ImVec2((w - p) / 2.f, 0)))
                         {
-                            //to impl
+                            rndr->SwitchCameraIdx();
                         }
                     }
 

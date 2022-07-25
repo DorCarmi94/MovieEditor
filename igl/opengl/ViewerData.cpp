@@ -132,7 +132,7 @@ IGL_INLINE void igl::opengl::ViewerData::UpdateBezierCP(std::vector<Eigen::Vecto
     }
 }
 
-IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
+IGL_INLINE Eigen::Vector3d igl::opengl::ViewerData::bezier_movement(float dis) {
     if (t == 0 || t == 1) {
         bezier_direction *= -1;
     }
@@ -162,6 +162,7 @@ IGL_INLINE void igl::opengl::ViewerData::bezier_movement(float dis) {
     //    lines.row(i) = new_row.transpose();
     //}
     center_dif += diff;
+    return diff;
     //current_position = new_position;
 }
 

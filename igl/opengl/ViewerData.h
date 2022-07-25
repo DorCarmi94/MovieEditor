@@ -323,7 +323,7 @@ public:
   // our additions end
 
   IGL_INLINE void UpdateBezierCP(std::vector<Eigen::Vector3d> new_p_bezier);
-  IGL_INLINE void bezier_movement(float dis);
+  IGL_INLINE Eigen::Vector3d bezier_movement(float dis);
   IGL_INLINE void init_mesh();
   //IGL_INLINE void igl::opengl::ViewerData::DrawCircle(double r);
   //IGL_INLINE void igl::opengl::ViewerData::DrawEllipse(double a, double b);

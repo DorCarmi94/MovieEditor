@@ -223,9 +223,8 @@
 				}*/
 				break;
 			case GLFW_KEY_1:
-				std::cout << "picked 1\n";
-				scn->selected_data_index = 7;
-				scn->UpdateBezierInfo(7);
+				scn->ShapeTransformation(scn->zTranslate, -1, 0);
+
 				break;
 			case GLFW_KEY_2:
 				std::cout << "picked 2\n";

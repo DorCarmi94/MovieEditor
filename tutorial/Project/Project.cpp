@@ -30,12 +30,14 @@ void Project::Init()
 	AddTexture("../../textures/cubemaps/Daylight Box_", 3);
 	AddTexture("../../textures/box0.bmp", 2);
 	AddTexture("../../textures/plane.png", 2);
+	AddTexture("../../textures/camera.png", 2);
+
 
 	AddShader("../../shaders/pickingShader");
 	AddShader("../../shaders/cubemapShader");
 	AddShader("../../shaders/basicShader");
 
-	for (int i = 0; i < 3; i++) {
+	for (int i = 0; i < 4; i++) {
 		AddMaterial(texIDs + i, slots + i, 1);
 	}
 

@@ -366,9 +366,12 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   }
 
   IGL_INLINE void Viewer::MoveObjects() {
-      for (int i = 7; i < data_list.size(); i++) {
+      for (int i = post_init_index; i < data_list.size(); i++) {
           if (display_current_runtime > data_list[i]->delay) {
-              data_list[i]->bezier_movement(0.01);
+              Eigen::Vector3d diff = data_list[i]->bezier_movement(0.01);
+              if (objectIdxToCameraIdx.count(i)) {
+                  rndr->cameras[objectIdxToCameraIdx[i]]->MyTranslate(diff, true);
+              }
           }
       }
   }
@@ -978,7 +981,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         const float FAR1 = 300.0f;
         AddShape(Cube, -1, TRIANGLES);
         SetShapeShader(data_list.size() - 1, 2);
-        SetShapeMaterial(data_list.size() - 1, 1);
+        SetShapeMaterial(data_list.size() - 1, 3);
         rndr->AddCamera2(Eigen::Vector3d(0, 0, 0), CAMERA_ANGLE1, (float)DISPLAY_WIDTH1 / (float)DISPLAY_HEIGHT1 / 2, NEAR1, FAR1);
         
         
