@@ -75,20 +75,7 @@ void Project::Init()
 	SetShapeShader(data_list.size() - 1, 2);
 	SetShapeMaterial(data_list.size() - 1, 1);
 
-	AddShape(Cube, -1, TRIANGLES);
-	SetShapeShader(data_list.size() - 1, 2);
-	SetShapeMaterial(data_list.size() - 1, 1);
-
-	AddShape(Cube, -1, TRIANGLES,2);
-	SetShapeShader(data_list.size() - 1, 2);
-	SetShapeMaterial(data_list.size() - 1, 1);
-
-
-	AddShape(Cube, -1, TRIANGLES,1);
-	SetShapeShader(data_list.size() - 1, 2);
-	SetShapeMaterial(data_list.size() - 1, 1);
-
-
+	selected_data_index = 0;
 }
 
 void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
@@ -97,7 +84,6 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	int r = ((shapeIndx) & 0x000000FF) >> 0;
 	int g = ((shapeIndx) & 0x0000FF00) >> 8;
 	int b = ((shapeIndx) & 0x00FF0000) >> 16;
-
 
 	s->Bind();
 	s->SetUniformMat4f("Proj", Proj);
@@ -110,7 +96,12 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 	}
 	else if (shaderIndx == 2 && shapeIndx != 0) {
-		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, data_list[shapeIndx]->transperancy);
+		if (shapeIndx == selected_data_index) {
+			s->SetUniform4f("lightColor", 1, 0, 0, 1);
+		}
+		else {
+			s->SetUniform4f("lightColor", 1, 1, 1, 1);
+		}
 	}
 	s->Unbind();
 }
