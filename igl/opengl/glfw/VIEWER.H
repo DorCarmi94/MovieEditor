@@ -203,8 +203,6 @@ public:
 
     bool zoom_area;
 
-    int shapesCounter = 0;
-
     void AddCameraShape();
 
     Renderer* rndr;

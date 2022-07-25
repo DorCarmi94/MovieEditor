@@ -41,8 +41,8 @@ void Project::Init()
 
 	//skybox start
 	AddShape(Cube, -2, TRIANGLES);	
-	SetShapeShader(shapesCounter, 1);
-	SetShapeMaterial(shapesCounter, 0);
+	SetShapeShader(data_list.size()-1, 1);
+	SetShapeMaterial(data_list.size() - 1, 0);
 	selected_data_index = 0;
 	float s = 100;
 	ShapeTransformation(scaleAll, s, 0);
@@ -50,57 +50,41 @@ void Project::Init()
 	//skybox end
 	
 	//bezier start
-	shapesCounter++;
 	AddShape(Bezier, -1, LINES, 1);
-	SetShapeShader(shapesCounter, 2);
-	SetShapeMaterial(shapesCounter, 2);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 2);
 
 	for (int i = 2; i < 6; i++) {
 		shapesCounter++;
 		AddShape(Sphere, -1, TRIANGLES, 1);
-		SetShapeShader(shapesCounter, 2);
-		SetShapeMaterial(shapesCounter, 1);
-		selected_data_index = shapesCounter;
+		SetShapeShader(data_list.size() - 1, 2);
+		SetShapeMaterial(data_list.size() - 1, 1);
+		selected_data_index = data_list.size() - 1;
 		ShapeTransformation(scaleAll, 0.25, 0);
 	}
-	shapesCounter++;
 	AddShape(Axis, -1, LINES, 1);
-//<<<<<<< HEAD
-	SetShapeShader(shapesCounter, 2);
-	SetShapeMaterial(shapesCounter, 2);
-	SetShapeStatic(shapesCounter);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 2);
+	SetShapeStatic(data_list.size() - 1);
 
-//=======
-//	SetShapeShader(6, 2);
-//	SetShapeMaterial(6, 2);
-//	SetShapeStatic(6);
-//>>>>>>> rotation
 	//bezier end
-	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES);
-	SetShapeShader(shapesCounter, 2);
-	SetShapeMaterial(shapesCounter, 1);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 1);
 
-	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES);
-//<<<<<<< HEAD
-	SetShapeShader(shapesCounter, 2);
-	SetShapeMaterial(shapesCounter, 1);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 1);
 
-	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES,2);
-	SetShapeShader(shapesCounter, 2);
-	SetShapeMaterial(shapesCounter, 1);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 1);
 
 
-	shapesCounter++;
 	AddShape(Cube, -1, TRIANGLES,1);
-	SetShapeShader(shapesCounter, 2);
-	SetShapeMaterial(shapesCounter, 1);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 1);
 
-//	SetShapeShader(8, 2);
-//	SetShapeMaterial(8, 1);;
-//>>>>>>> rotation
 
 }
 

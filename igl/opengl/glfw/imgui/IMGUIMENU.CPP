@@ -349,7 +349,7 @@ namespace igl
                             Project* theProj = (Project*)viewer;
                             //rndr
                             int lastCamera = theProj->rndr->cameras.size() - 1;
-                            viewer->objectIdxToCameraIdx[viewer->shapesCounter]= lastCamera;
+                            viewer->objectIdxToCameraIdx[viewer->data_list.size() - 1]= lastCamera;
                             viewer->cameraToObjectIdx[lastCamera]= viewer->shapesCounter;
                             
                         }
