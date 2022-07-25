@@ -350,7 +350,7 @@ namespace igl
                             //rndr
                             int lastCamera = theProj->rndr->cameras.size() - 1;
                             viewer->objectIdxToCameraIdx[viewer->data_list.size() - 1]= lastCamera;
-                            viewer->cameraToObjectIdx[lastCamera]= viewer->shapesCounter;
+                            viewer->cameraToObjectIdx[lastCamera]= viewer->data_list.size() - 1;
                             
                         }
                         ImGui::SameLine(0, p);

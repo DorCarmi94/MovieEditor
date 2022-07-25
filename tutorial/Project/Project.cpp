@@ -55,7 +55,6 @@ void Project::Init()
 	SetShapeMaterial(data_list.size() - 1, 2);
 
 	for (int i = 2; i < 6; i++) {
-		shapesCounter++;
 		AddShape(Sphere, -1, TRIANGLES, 1);
 		SetShapeShader(data_list.size() - 1, 2);
 		SetShapeMaterial(data_list.size() - 1, 1);

@@ -209,6 +209,7 @@
 				if (objIdx != 0)
 				{
 					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
+					
 				}
 				break;
 			
