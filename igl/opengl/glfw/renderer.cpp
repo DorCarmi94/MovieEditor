@@ -228,6 +228,12 @@ void Renderer::AddCamera(const Eigen::Vector3d& pos, float fov, float relationWH
     cameras.back()->MyTranslate(pos, false);
 }
 
+void Renderer::AddCamera2(const Eigen::Vector3d& pos, float fov, float relationWH, float zNear, float zFar)
+{
+    cameras.push_back(new igl::opengl::Camera(fov, relationWH, zNear, zFar));
+    cameras.back()->MyTranslate(pos, false);
+}
+
 void Renderer::AddViewport(int left, int bottom, int width, int height)
 {
     viewports.emplace_back(Eigen::Vector4i(left, bottom, width, height));
@@ -397,24 +403,59 @@ void Renderer::MoveCamera(int cameraIndx, int type, float amt)
     {
         case xTranslate:
             cameras[cameraIndx]->MyTranslate( Eigen::Vector3d(amt, 0, 0),1); //MakeTransNoScale was here
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->MyTranslate(Eigen::Vector3d(amt, 0, 0), 1); //MakeTransNoScale was here
+            }
             break;
         case yTranslate:
             cameras[cameraIndx]->MyTranslate( Eigen::Vector3d(0, amt, 0),1); //MakeTransNoScale was here
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->MyTranslate(Eigen::Vector3d(0, amt, 0), 1); //MakeTransNoScale was here
+            }
             break;
         case zTranslate:
             cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, 0, amt),1); //MakeTransNoScale was here
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->MyTranslate(Eigen::Vector3d(0, 0, amt), 1); //MakeTransNoScale was here
+            }
             break;
         case xRotate:
             cameras[cameraIndx]->MyRotate(Eigen::Vector3d(1, 0, 0), amt);
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->MyRotate(Eigen::Vector3d(1, 0, 0), amt);
+            }
             break;
         case yRotate:
             cameras[cameraIndx]->RotateInSystem(Eigen::Vector3d(0, 1, 0), amt);
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->RotateInSystem(Eigen::Vector3d(0, 1, 0), amt);
+            }
             break;
         case zRotate:
             cameras[cameraIndx]->MyRotate(Eigen::Vector3d(0, 0, 1), amt);
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->MyRotate(Eigen::Vector3d(0, 0, 1), amt);
+            }
             break;
         case scaleAll:
             cameras[cameraIndx]->MyScale( Eigen::Vector3d(amt, amt,  amt));
+            if (scn->cameraToObjectIdx.count(cameraIndx))
+            {
+                int cameraObjIdx = scn->cameraToObjectIdx[cameraIndx];
+                scn->data_list[cameraObjIdx]->MyScale(Eigen::Vector3d(amt, amt, amt));
+            }
             break;
         default:
             break;
@@ -447,6 +488,7 @@ void Renderer::MouseProccessing(int button, int mode, int viewportIndx)
 		if(button == 2)
 			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[0]->MakeTransd(), viewportIndx);
 		else
+            
 			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[0]->MakeTransd(), viewportIndx);
     }
 

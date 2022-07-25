@@ -977,7 +977,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         AddShape(Cube, -1, TRIANGLES);
         SetShapeShader(data_list.size() - 1, 2);
         SetShapeMaterial(data_list.size() - 1, 1);
-        rndr->AddCamera(Eigen::Vector3d(0, 0, 0), CAMERA_ANGLE1, (float)DISPLAY_WIDTH1 / (float)DISPLAY_HEIGHT1 / 2, NEAR1, FAR1, 2);
+        rndr->AddCamera2(Eigen::Vector3d(0, 0, 0), CAMERA_ANGLE1, (float)DISPLAY_WIDTH1 / (float)DISPLAY_HEIGHT1 / 2, NEAR1, FAR1);
         
         
         

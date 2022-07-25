@@ -429,11 +429,11 @@ namespace igl
                     auto make_checkbox = [&](const char* label, unsigned int& option)
                     {
                         return ImGui::Checkbox(label,
-                            [&]() { return drawInfos[1]->is_set(option); },
-                            [&](bool value) { return drawInfos[1]->set(option, value); }
+                            [&]() { return drawInfos[0]->is_set(option); },
+                            [&](bool value) { return drawInfos[0]->set(option, value); }
                         );
                     };
-                    ImGui::ColorEdit4("Background", drawInfos[1]->Clear_RGBA.data(),
+                    ImGui::ColorEdit4("Background", drawInfos[0]->Clear_RGBA.data(),
                         ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
 
                     // Draw options

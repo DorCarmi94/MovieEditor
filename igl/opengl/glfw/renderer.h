@@ -124,6 +124,7 @@ public:
 
     void AddCamera(const Eigen::Vector3d &pos, float fov, float relationWH, float zNear, float zFar,
                    int infoIndx = -1);
+    void AddCamera2(const Eigen::Vector3d& pos, float fov, float relationWH, float zNear, float zFar);
 
     void AddViewport(int left, int bottom, int width, int height);
 
