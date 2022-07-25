@@ -110,51 +110,17 @@ IGL_INLINE void igl::opengl::ViewerData::set_mesh(
       cerr << "ERROR (set_mesh): The new mesh has a different number of vertices/faces. Please clear the mesh before plotting."<<endl;
   }
   dirty |= MeshGL::DIRTY_FACE | MeshGL::DIRTY_POSITION;
-  //if (id != 0) {
-  //    init_mesh();
-  //    std::cout << id << std::endl;
-  //}
 }
 
 IGL_INLINE void igl::opengl::ViewerData::init_mesh() {
     center_dif = Eigen::Vector3d(0, 0, 0);
-  
-    //float LO = -5;
-    //float HI = 5;
+
     p_bezier.resize(4, Eigen::Vector3d(0, 0, 0));
 
-    //for (int i = 0; i < p_bezier.size(); i++) {
-
-    //    // random number generation https://stackoverflow.com/questions/686353/random-float-number-generation
-    //    float x = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
-    //    float z = 0;
-    //    float y = LO + static_cast <float> (rand()) / (static_cast <float> (RAND_MAX / (HI - LO)));
-
-    //    p_bezier[i] = Eigen::Vector3d(x, y, z);
-    //}
     p_bezier[0] = Eigen::Vector3d(-2, -3, 0);
     p_bezier[1] = Eigen::Vector3d(-1, 0, 0);
     p_bezier[2] = Eigen::Vector3d(1, 0, 0);
     p_bezier[3] = Eigen::Vector3d(2, -3, 0);
-    //current_position = p_bezier[0];
-    //MyTranslate(p_bezier[0], true);
-    //center_dif += p_bezier[0];
-    //p_bezier[0] = Eigen::Vector3d(-2, -2, 0); //todo just for testing now, remove later
-    //p_bezier[1] = Eigen::Vector3d(-0.5, -0.5, 0);
-    //p_bezier[2] = Eigen::Vector3d(3, 1, 0);
-    //p_bezier[3] = Eigen::Vector3d(5, 4, 0);
-
-    //for (float i = 0.1; i < 1; i += 0.01)
-    //{
-    //    Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
-    //    add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
-    //    curr_pos = new_position - p_bezier[0];
-    //}
-
-    //float i = 1;
-    //Eigen::Vector3d new_position = pow((1 - i), 3) * p_bezier[0] + 3 * pow((1 - i), 2) * i * p_bezier[1] + 3 * (1 - i) * pow(i, 2) * p_bezier[2] + pow(i, 3) * p_bezier[3];
-    //add_edges(curr_pos.transpose(), (new_position - p_bezier[0]).transpose(), Eigen::RowVector3d(1, 0, 0));
-    //}
 }
 
 IGL_INLINE void igl::opengl::ViewerData::UpdateBezierCP(std::vector<Eigen::Vector3d> new_p_bezier) {

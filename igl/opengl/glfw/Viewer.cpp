@@ -414,9 +414,8 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   }
 
   //our additions
-  IGL_INLINE void Viewer::ChangeLayer(int layer)//todo maybe change later
+  IGL_INLINE void Viewer::ChangeLayer(int layer)
   {
-      //selected_data_index = 1;
       if (selected_data_index != 0) {
           data_list[selected_data_index]->layer = layer;
       }
@@ -427,19 +426,23 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
       layers++;
   }
 
-  IGL_INLINE void Viewer::RemoveLayer(int layer)//todo
+  IGL_INLINE bool Viewer::RemoveLayer(int layer)
   {
-      /*if (layer > 0) {
+      if (layer > 0) {
           for (int i = 0; i < data_list.size(); i++) {
-
+              if (data_list[i]->layer >= layer) {
+                  data_list[i]->layer--;
+              }
           }
+          layers--;
+          return true;
       }
-      layers--;*/
+      return false;
   }
 
   //Bezier
   IGL_INLINE void Viewer::UpdateBezierInfo(int idx) {
-      if (idx > 6 /*!= previous_selected_data_index*/) { //todo bring back
+      if (idx >= post_init_index) {
           //move back to 0, 0, 0 and add the new CP location
           for (int j = 2; j < 6; j++) {
               data_list[j]->MyTranslate(-data_list[j]->current_position + data_list[idx]->p_bezier[j-2], false);
@@ -711,7 +714,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
       data()->mode = mode;
       data()->shaderID = 1;
       data()->viewports = 1 << viewport;
-      //data()->viewports|=1 << 1;
       //data()->is_visible = 0x1;
       data()->show_lines = 0;
       data()->show_overlay = 0;
@@ -818,7 +820,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
         if (button == 1)
         {
-            if (selected_data_index > 5) {
+            if (selected_data_index >= post_init_index) {
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
                 data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(1, 0, 0), yrel / 100.0);
 

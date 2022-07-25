@@ -91,7 +91,7 @@ namespace glfw
     //Layers
     IGL_INLINE void Viewer::ChangeLayer(int layer);
     IGL_INLINE void Viewer::AddLayer();
-    IGL_INLINE void Viewer::RemoveLayer(int layer);
+    IGL_INLINE bool Viewer::RemoveLayer(int layer);
 
     //Bezier
     IGL_INLINE void Viewer::UpdateBezierInfo(int idx);
@@ -196,6 +196,8 @@ public:
     unsigned int slots[100];
     unsigned int texture_index;
     unsigned int material_index;
+
+    int post_init_index;
 
     int layers;
 

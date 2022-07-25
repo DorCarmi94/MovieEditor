@@ -66,7 +66,9 @@ void Project::Init()
 	SetShapeMaterial(data_list.size() - 1, 2);
 	SetShapeStatic(data_list.size() - 1);
 
+	post_init_index = data_list.size();
 	//bezier end
+
 	AddShape(Cube, -1, TRIANGLES);
 	SetShapeShader(data_list.size() - 1, 2);
 	SetShapeMaterial(data_list.size() - 1, 1);

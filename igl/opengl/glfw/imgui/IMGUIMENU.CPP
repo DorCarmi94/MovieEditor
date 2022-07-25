@@ -250,7 +250,6 @@ namespace igl
                     // Material
                     if (ImGui::CollapsingHeader("Material", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        //todo seems like selected_data_index reverts back to 0, needs to be fixed
                         float w = ImGui::GetContentRegionAvailWidth();
                         float p = ImGui::GetStyle().FramePadding.x;
                         if (viewer->selected_data_index > 6) {
@@ -312,11 +311,17 @@ namespace igl
                         {
                             viewer->AddLayer();
                         }
+                        if (ImGui::Button("Remove Layer##Layers", ImVec2(-1, 0)))
+                        {
+                            if (viewer->RemoveLayer(chosen_layer)) {
+                                chosen_layer--;
+                            }
+                        }
 
-                        if (ImGui::Button("Hide Layer##Layers", ImVec2(-1, 0))) //todo implement better
+                        if (ImGui::Button("Hide Layer##Layers", ImVec2(-1, 0)))
                         {
                             for (int i = 0; i < viewer->data_list.size(); i++) {
-                                if (viewer->data_list[i]->layer == chosen_layer) {
+                                if (i >= viewer->post_init_index && viewer->data_list[i]->layer == chosen_layer) {
                                     viewer->data_list[i]->Hide();
                                 }
                             }
@@ -324,7 +329,7 @@ namespace igl
                         if (ImGui::Button("Unhide Layer##Layers", ImVec2(-1, 0)))
                         {
                             for (int i = 0; i < viewer->data_list.size(); i++) {
-                                if (viewer->data_list[i]->layer == chosen_layer) {
+                                if (i >= viewer->post_init_index && viewer->data_list[i]->layer == chosen_layer) {
                                     viewer->data_list[i]->UnHide();
                                 }
                             }
