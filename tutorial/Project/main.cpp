@@ -31,7 +31,12 @@ int main(int argc,char *argv[])
 	//rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 0);
     //rndr->MoveCamera(0, rndr->zTranslate, 10);
 	
-
+	//Scissor Square
+	rndr->AddViewport(400, 0, 600, 800);
+	rndr->CopyDraw(1, rndr->viewport, 2);
+	int size = rndr->drawInfos.size();
+	rndr->ClearDrawFlag(size - 1, rndr->toClear|rndr->stencilTest);
+	rndr->SetDrawFlag(size - 1, rndr->blend|rndr->inAction2|rndr->scissorTest);
 	
 	//Split
 	/*rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);

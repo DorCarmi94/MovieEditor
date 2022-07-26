@@ -30,15 +30,22 @@
 			if (x2 > 400)
 			{
 				rndr->UpdatePress(x2, y2);
-				if (rndr->Picking_2((int)x2, (int)y2, findViewPort(window, x2, y2)))
+				if (button == GLFW_MOUSE_BUTTON_RIGHT)
 				{
-					rndr->UpdatePosition(x2, y2);
-					if (button == GLFW_MOUSE_BUTTON_LEFT)
-						rndr->Pressed();
+					rndr->RightPressed();
 				}
 				else
 				{
-					rndr->UnPick(2);
+					if (rndr->Picking_2((int)x2, (int)y2, findViewPort(window, x2, y2)))
+					{
+						rndr->UpdatePosition(x2, y2);
+						if (button == GLFW_MOUSE_BUTTON_LEFT)
+							rndr->Pressed();
+					}
+					else
+					{
+						rndr->UnPick(2);
+					}
 				}
 			}
 		
@@ -47,6 +54,11 @@
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 			rndr->UnPick(2);
+			if (rndr->IsRightPressed())
+			{
+				rndr->RightPressed();
+			}
+			
 		}
 	}
 	

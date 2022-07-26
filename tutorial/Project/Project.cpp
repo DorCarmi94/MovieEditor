@@ -75,6 +75,15 @@ void Project::Init()
 	SetShapeShader(data_list.size() - 1, 2);
 	SetShapeMaterial(data_list.size() - 1, 1);
 
+	AddShape(Plane, -2, TRIANGLES,2);
+	SetShapeShader(data_list.size() - 1, 2);
+	SetShapeMaterial(data_list.size() - 1, 2);
+	
+	selected_data_index = data_list.size() - 1;
+	ShapeTransformation(zTranslate, -1.1, 1);
+	SetShapeStatic(data_list.size() - 1);
+
+
 	selected_data_index = 0;
 }
 

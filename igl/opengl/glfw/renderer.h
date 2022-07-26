@@ -165,8 +165,10 @@ public:
     inline void ClearDrawFlag(int infoIndx, unsigned int flag) { drawInfos[infoIndx]->ClearFlags(flag); }
 
     inline void Pressed() { isPressed = !isPressed; }
+    inline void RightPressed() { isRightPressed = !isRightPressed; }
 
     inline bool IsPressed() const { return isPressed; }
+    inline bool IsRightPressed() const { return isRightPressed; }
 
     inline void FreeShapes(int viewportIndx) { scn->ClearPickedShapes(viewportIndx); };
 
@@ -195,6 +197,7 @@ public:
     inline bool IsMany() const { return isMany; }
     void Init(igl::opengl::glfw::Viewer *scene, std::list<int> xViewport, std::list<int> yViewport, int pickingBits,igl::opengl::glfw::imgui::ImGuiMenu *_menu);
     std::vector<igl::opengl::Camera*> cameras;
+    std::vector<DrawInfo*> drawInfos;
 
 private:
     // Stores all the viewing options
@@ -202,7 +205,7 @@ private:
     
     igl::opengl::glfw::Viewer* scn;
     std::vector<Eigen::Vector4i> viewports;
-    std::vector<DrawInfo *> drawInfos;
+    
     std::vector<igl::opengl::DrawBuffer*> buffers;
 	size_t selected_core_index;
 	int next_core_id;
@@ -213,6 +216,7 @@ private:
     bool isPicked;
     int materialIndx2D;
     bool isPressed;
+    bool isRightPressed;
     int currentViewport;
 	unsigned int next_property_id = 1;
 	float highdpi;

@@ -125,7 +125,6 @@ IGL_INLINE void Renderer::draw_by_info(int info_index){
         else
             Clear(info->Clear_RGBA.x(), info->Clear_RGBA.y(), info->Clear_RGBA.z(), info->Clear_RGBA.w(),info->flags);
     }
-    std::cout << "draw info index: " << info_index << std::endl;
     scn->Draw(info->shaderIndx, Proj, View, info->viewportIndx, info->flags,info->property_id);
 }
 
@@ -155,7 +154,7 @@ IGL_INLINE void Renderer::draw( GLFWwindow* window)
     int indx = 0;
     for (auto& info : drawInfos)
     {
-        if (!(info->flags & (inAction | inAction2)) || ((info->flags & inAction2) && !(info->flags & stencilTest) && isPressed /*&& !isPicked*/) || ((info->flags & inAction2) && (info->flags & stencilTest)  && isPicked ))
+        if (!(info->flags & (inAction | inAction2)) || ((info->flags & inAction2) && !(info->flags & stencilTest) && isRightPressed && !isPicked) || ((info->flags & inAction2) && (info->flags & stencilTest)  && isPicked ))
             draw_by_info(indx);
         indx++;
     }
