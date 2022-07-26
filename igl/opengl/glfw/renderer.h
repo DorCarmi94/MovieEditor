@@ -104,6 +104,8 @@ public:
     int CurrentCameraIdx = 0;
     void SwitchCameraIdx();
 
+    bool isZoom = false;
+
 // Callbacks
 //	 double Picking(double x, double y);
 	 inline void Animate() { scn->Animate(); };
@@ -121,6 +123,8 @@ public:
     float UpdatePosition(float xpos, float ypos);
 
     void UpdatePress(float xpos, float ypos);
+
+    void MakeZoom();
 
     void AddCamera(const Eigen::Vector3d &pos, float fov, float relationWH, float zNear, float zFar,
                    int infoIndx = -1);
@@ -199,6 +203,8 @@ public:
     std::vector<igl::opengl::Camera*> cameras;
     std::vector<DrawInfo*> drawInfos;
     bool isMany;
+
+    Eigen::Affine3d origCameraLocation;
 
 private:
     // Stores all the viewing options

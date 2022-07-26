@@ -28,6 +28,10 @@ int main(int argc,char *argv[])
 	scn->rndr = rndr;
 
 	rndr->CopyDraw(0, rndr->viewport, 1);
+
+	
+
+
 	//rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 0);
     //rndr->MoveCamera(0, rndr->zTranslate, 10);
 	

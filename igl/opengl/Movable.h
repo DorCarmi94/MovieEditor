@@ -30,6 +30,9 @@ public:
 	Eigen::Vector3d GetTranslation() const{ return Tout.translation(); }
 
 	void SetTranslation(Eigen::Vector3d amt) {Tout.pretranslate(amt);}
+
+	Eigen::Affine3d GetTout() { return Tout; }
+	void SetTout(Eigen::Affine3d tout) { Tout= tout; }
     virtual ~Movable() {}
 private:
 

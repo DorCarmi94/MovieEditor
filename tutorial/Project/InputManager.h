@@ -56,10 +56,18 @@
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
 			Project* scn = (Project*)rndr->GetScene();
 			rndr->UnPick(2);
+
 			if (rndr->IsRightPressed())
 			{
 				rndr->RightPressed();
-				if (scn->region_selection) {
+				if (rndr->isZoom)
+				{
+					
+					rndr->MakeZoom();
+					
+					scn->region_selection = false;
+				}
+				else if (scn->region_selection) {
 					rndr->PickMany(0);
 					scn->region_selection = false;
 				}
@@ -256,12 +264,20 @@
 				scn->UpdateBezierInfo(8);
 				break;
 			case GLFW_KEY_3:
-				std::cout << "picked 3\n";
-				scn->selected_data_index = 3;
+			{
+				Eigen::Matrix4f prj = rndr->cameras[0]->_projection;
+				rndr->isZoom = !rndr->isZoom;
+				std::cout << "isZoom: " << rndr->isZoom << std::endl;
+				break;
+			}
+
+			case GLFW_KEY_4:
+				rndr->cameras[0]->SetTout(rndr->origCameraLocation);
 				break;
 
 			case GLFW_KEY_S:
 				rndr->SwitchCameraIdx();
+
 				break;
 			default:
 				break;

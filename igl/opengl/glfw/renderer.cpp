@@ -325,6 +325,48 @@ bool contains(std::vector<int> v, int value) {
     return false;
 }
 
+void Renderer::MakeZoom()
+{
+    int viewportCurrIndx = 0;
+
+
+
+    int xMin = std::min(xWhenPress, xold);
+    int yMin = std::min(viewports[viewportCurrIndx].w() - yWhenPress, viewports[viewportCurrIndx].w() - yold);
+    int xMax = std::max(xWhenPress, xold);
+    int yMax = std::max(viewports[viewportCurrIndx].w() - yWhenPress, viewports[viewportCurrIndx].w() - yold);
+
+
+
+    int camera_x=(int)cameras[0]->GetTranslation().x();
+    int camera_y=(int)cameras[0]->GetTranslation().y();
+    int camera_z=(int)cameras[0]->GetTranslation().z();
+
+    
+
+    int newPointX = (xMax+xMin)/2;
+    int newPointY = (yMax +yMin)/2;
+
+    
+
+    float a = (camera_x-newPointX) / 600.0f;
+    float b = (camera_y-newPointY) / 800.0f;
+
+    if (newPointX > 700)
+    {
+        a *= -1;
+    }
+
+    if (newPointY > 400)
+    {
+        b *= -1;
+    }
+
+    MoveCamera(0, xTranslate, a);
+    MoveCamera(0, yTranslate, b);
+    MoveCamera(0, zTranslate, -1);
+}
+
 void Renderer::PickMany(int viewportIndx)
 {
     if (!isPicked)
@@ -575,6 +617,7 @@ IGL_INLINE void Renderer::Init(igl::opengl::glfw::Viewer* scene, std::list<int>x
     scn = scene;
     menu = _menu;
     MoveCamera(0, zTranslate, 10);
+    origCameraLocation = cameras[0]->GetTout();
     Eigen::Vector4i viewport;
     glGetIntegerv(GL_VIEWPORT, viewport.data());
     buffers.push_back(new igl::opengl::DrawBuffer());
