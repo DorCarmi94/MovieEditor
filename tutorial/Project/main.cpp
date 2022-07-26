@@ -29,12 +29,7 @@ int main(int argc,char *argv[])
 
 	rndr->CopyDraw(0, rndr->viewport, 1);
 
-	rndr->AddCamera(Eigen::Vector3d(0, 0, 10), CAMERA_ANGLE, ((float)DISPLAY_WIDTH - 400) / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
-
-
-	//rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 0);
-    //rndr->MoveCamera(0, rndr->zTranslate, 10);
-	
+	//rndr->AddCamera(Eigen::Vector3d(0, 0, 10), CAMERA_ANGLE, ((float)DISPLAY_WIDTH - 400) / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
 	//Scissor Square
 	rndr->AddViewport(400, 0, 600, 800);
 	rndr->CopyDraw(1, rndr->viewport, 2);
@@ -42,26 +37,6 @@ int main(int argc,char *argv[])
 	rndr->ClearDrawFlag(size - 1, rndr->toClear|rndr->stencilTest);
 	rndr->SetDrawFlag(size - 1, rndr->blend|rndr->inAction2|rndr->scissorTest);
 	
-	//Split
-	/*rndr->AddCamera(Eigen::Vector3d(0, 0, 0), 90, (float)DISPLAY_WIDTH / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
-	rndr->MoveCamera(1, rndr->zTranslate, 10);
-	rndr->AddViewport(0, 0, DISPLAY_WIDTH / 2, DISPLAY_HEIGHT);
-	
-	rndr->AddDraw(2,1,1,0, 270);
-	rndr->ClearDrawFlag(2, rndr->toClear | rndr->stencilTest);*/
-
-
-	//For Ok Highlight
-	//rndr->AddViewport(0, 0, DISPLAY_WIDTH/2, DISPLAY_HEIGHT);
-	//rndr->AddDraw(0, 0, 3, 0, rndr->stencil2 | rndr->stencilTest | rndr->depthTest | rndr->scaleAbit | rndr->onPicking /*| rndr->inAction|rndr->inAction2*/);
-
-
-	//rndr->CopyDraw(1, rndr->viewport, 2);
-	/*rndr->ClearDrawFlag(3, rndr->toClear | rndr->stencilTest);
-	rndr->SetDrawFlag(3, rndr->blend | rndr->inAction2 | rndr->scissorTest);*/
-	//Dor Changes
-	
-	//rndr->AddDraw(0, 0, 3, 0, rndr->stencilTest | rndr->depthTest );
 
 	disp.SetRenderer(rndr);
 

@@ -21,9 +21,6 @@ Project::Project()
 	objectIdxToCameraIdx = std::map<int, int>();
 }
 
-//Project::Project(float angle ,float relationWH, float near, float far) : Scene(angle,relationWH,near,far)
-//{ 	
-//}
 
 void Project::Init()
 {
@@ -85,7 +82,7 @@ void Project::Init()
 	AddShape(Cube, -1, TRIANGLES);
 	SetShapeShader(data_list.size() - 1, 2);
 	SetShapeMaterial(data_list.size() - 1, 1);
-
+	previous_data_index = post_init_index;
 	UpdateBezierInfo(post_init_index);
 	
 	selected_data_index = 0;

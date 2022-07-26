@@ -363,6 +363,11 @@ namespace igl
                         {
                             rndr->SwitchCameraIdx();
                         }
+                        if (ImGui::Button("Reset Camera##Cameras", ImVec2((w - p) / 2.f, 0)))
+                        {
+                            rndr->cameras[0]->SetTout(rndr->origCameraLocation);
+                        }
+
                     }
 
                     // Animation Time
@@ -390,6 +395,8 @@ namespace igl
                     if (ImGui::CollapsingHeader("region", ImGuiTreeNodeFlags_DefaultOpen))
                     {
                         ImGui::Checkbox("region selection##region", &(viewer->region_selection));
+                        ImGui::Checkbox("zoom on region##region", &(rndr->isZoom));
+
                     }
 
                     // Viewing options
@@ -400,10 +407,6 @@ namespace igl
                             std::cout << "not implemented yet" << std::endl;
                             //      core[1].align_camera_center(viewer->data().V, viewer->data().F); TODO: add function like this to camera
                         }
-                        //if (ImGui::Button("Snap canonical view", ImVec2(-1, 0)))
-                        //{
-                        //  core[1].snap_to_canonical_quaternion();
-                        //}
 
                         // Zoom
                         ImGui::PushItemWidth(80 * menu_scaling());
