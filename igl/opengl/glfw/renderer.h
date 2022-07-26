@@ -145,6 +145,7 @@ public:
     inline void BindViewport2D(int indx) { drawInfos[indx]->SetFlags(is2D); }
 
     void MoveCamera(int cameraIndx, int type, float amt);
+    void MoveCamera2(int cameraIndx, int type, float amt);
 
     void ChangeCamera(int drawinfo, int cameraIndx);
 

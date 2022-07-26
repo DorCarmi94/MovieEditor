@@ -859,8 +859,8 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
                 if (objectIdxToCameraIdx.count(selected_data_index))
                 {
-                    rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yRotate, -xrel / 100);
-                    rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xRotate, yrel / 100);
+                    rndr->MoveCamera2(objectIdxToCameraIdx[selected_data_index], yRotate, -xrel / 100.0);
+                    rndr->MoveCamera2(objectIdxToCameraIdx[selected_data_index], xRotate, yrel / 100.0);
                 }
             }
             else

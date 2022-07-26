@@ -458,6 +458,11 @@ IGL_INLINE void Renderer::post_resize(GLFWwindow* window, int w, int h)
 void Renderer::SwitchCameraIdx()
 {
     this->CurrentCameraIdx = (this->CurrentCameraIdx + 1) % cameras.size();
+    if (this->CurrentCameraIdx == 1)
+    {
+        this->CurrentCameraIdx = (this->CurrentCameraIdx + 1) % cameras.size();
+
+    }
     drawInfos[0]->cameraIndx = CurrentCameraIdx;
     drawInfos[1]->cameraIndx = CurrentCameraIdx;
 }
@@ -524,6 +529,36 @@ void Renderer::MoveCamera(int cameraIndx, int type, float amt)
             break;
         default:
             break;
+    }
+}
+
+void Renderer::MoveCamera2(int cameraIndx, int type, float amt)
+{
+    switch (type)
+    {
+    case xTranslate:
+        cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(amt, 0, 0), 1); //MakeTransNoScale was here
+        break;
+    case yTranslate:
+        cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, amt, 0), 1); //MakeTransNoScale was here
+        break;
+    case zTranslate:
+        cameras[cameraIndx]->MyTranslate(Eigen::Vector3d(0, 0, amt), 1); //MakeTransNoScale was here
+        break;
+    case xRotate:
+        cameras[cameraIndx]->MyRotate(Eigen::Vector3d(1, 0, 0), amt);
+        break;
+    case yRotate:
+        cameras[cameraIndx]->RotateInSystem(Eigen::Vector3d(0, 1, 0), amt);
+        break;
+    case zRotate:
+        cameras[cameraIndx]->MyRotate(Eigen::Vector3d(0, 0, 1), amt);
+        break;
+    case scaleAll:
+        cameras[cameraIndx]->MyScale(Eigen::Vector3d(amt, amt, amt));
+        break;
+    default:
+        break;
     }
 }
 
