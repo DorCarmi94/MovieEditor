@@ -27,6 +27,7 @@
 			glfwGetCursorPos(window, &x2, &y2);
 			
 			
+			
 			if (x2 > 400)
 			{
 				rndr->UpdatePress(x2, y2);
@@ -239,6 +240,12 @@
 					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
 				}*/
 				break;
+
+			case GLFW_KEY_BACKSPACE:
+				scn->pShapes.clear();
+				rndr->isMany = false;
+				break;
+
 			case GLFW_KEY_1:
 				scn->ShapeTransformation(scn->zTranslate, -1, 0);
 

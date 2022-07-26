@@ -94,6 +94,14 @@ void Project::Init()
 	selected_data_index = 0;
 }
 
+bool contains_prj(std::vector<int> v, int value) {
+	if (std::count(v.begin(), v.end(), value)) {
+		//std::cout << "Element found";
+		return true;
+	}
+	return false;
+}
+
 void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, const Eigen::Matrix4f& Model, unsigned int  shaderIndx, unsigned int shapeIndx)
 {
 	Shader* s = shaders[shaderIndx];
@@ -114,6 +122,10 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	else if (shaderIndx == 2 && shapeIndx != 0) 
 	{
 		if (shapeIndx == selected_data_index) {
+			s->SetUniform4f("lightColor", 1, 0, 0, 1);
+		}
+		else if (contains_prj(pShapes, shapeIndx))
+		{
 			s->SetUniform4f("lightColor", 1, 0, 0, 1);
 		}
 		else {

@@ -823,7 +823,28 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
         if (button == 1)
         {
-            if (selected_data_index >= post_init_index) {
+            if (rndr->IsMany())
+            {
+                for (int i = 0; i < pShapes.size(); i++)
+                {
+                    int theIdx = pShapes[i];
+                    if (theIdx >= post_init_index)
+                    {
+                        WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
+                        data_list[theIdx]->RotateInSystem(Eigen::Vector3d(0, 1, 0), -xrel / 100.0);
+
+                        data_list[theIdx]->RotateInSystem(Eigen::Vector3d(1, 0, 0), yrel / 100.0);
+
+                        if (objectIdxToCameraIdx.count(theIdx))
+                        {
+                            //std::cout << objectIdxToCameraIdx[selected_data_index] << " here" << std::endl;
+                            rndr->MoveCamera(objectIdxToCameraIdx[theIdx], yRotate, -xrel / 100);
+                            rndr->MoveCamera(objectIdxToCameraIdx[theIdx], xRotate, yrel / 100);
+                        }
+                    }
+                }
+            }
+            else if (selected_data_index >= post_init_index) {
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
                 data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(0, 1, 0), -xrel / 100.0);
 
@@ -847,7 +868,23 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
             if (button == 0)
             {
-                if (selected_data_index > 0) {
+                if (rndr->IsMany())
+                {
+                    for (int i = 0; i < pShapes.size(); i++)
+                    {
+                        int theIdx = pShapes[i];
+                        if (theIdx > 0) {
+                            WhenTranslate2(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff, theIdx);
+                            data_list[theIdx]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                            if (objectIdxToCameraIdx.count(theIdx))
+                            {
+                                rndr->MoveCamera(objectIdxToCameraIdx[theIdx], xTranslate, -xrel / movCoeff);
+                                rndr->MoveCamera(objectIdxToCameraIdx[theIdx], yTranslate, yrel / movCoeff);
+                            }
+                        }
+                    }
+                }
+                else if (selected_data_index > 0) {
                     WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
                     data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
                     if (objectIdxToCameraIdx.count(selected_data_index))
@@ -855,9 +892,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                         rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xTranslate, -xrel / movCoeff);
                         rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yTranslate, yrel / movCoeff);
                     }
-
-
-
                     if (selected_data_index > 1 && selected_data_index < 6) {
                         data_list[previous_data_index]->p_bezier[selected_data_index - 2] += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
                         UpdateBezierInfo(previous_data_index);
@@ -977,6 +1011,19 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         WhenTranslate(dx,dy);
 
         
+    }
+
+    void Viewer::WhenTranslate2(const Eigen::Matrix4d& preMat, float dx, float dy, int shapeIdx)
+    {
+        Movable* obj;
+        if (shapeIdx == 0 || data_list[shapeIdx]->IsStatic())
+            obj = (Movable*)this;
+        else  if (shapeIdx > 0) { obj = (Movable*)data_list[shapeIdx]; }
+        obj->TranslateInSystem(preMat.block<3, 3>(0, 0), Eigen::Vector3d(dx, 0, 0));
+        obj->TranslateInSystem(preMat.block<3, 3>(0, 0), Eigen::Vector3d(0, dy, 0));
+        WhenTranslate(dx, dy);
+
+
     }
     
     void Viewer::AddCameraShape()

@@ -198,6 +198,7 @@ public:
     void Init(igl::opengl::glfw::Viewer *scene, std::list<int> xViewport, std::list<int> yViewport, int pickingBits,igl::opengl::glfw::imgui::ImGuiMenu *_menu);
     std::vector<igl::opengl::Camera*> cameras;
     std::vector<DrawInfo*> drawInfos;
+    bool isMany;
 
 private:
     // Stores all the viewing options
@@ -212,7 +213,7 @@ private:
     int xold, yold, xrel, yrel, zrel;
     int maxPixX, maxPixY;
     int xWhenPress, yWhenPress;
-    bool isMany;
+    
     bool isPicked;
     int materialIndx2D;
     bool isPressed;

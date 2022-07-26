@@ -238,6 +238,7 @@ public:
       void ClearPickedShapes(int viewportIndx);
 
       int AddMaterial(unsigned int *texIndices, unsigned int *slots, unsigned int size);
+      void WhenTranslate2(const Eigen::Matrix4d& preMat, float dx, float dy, int shapeIdx);
 
       Eigen::Matrix4d GetPriviousTrans(const Eigen::Matrix4d &View, unsigned int index);
 
