@@ -30,7 +30,7 @@
 			if (x2 > 400)
 			{
 				rndr->UpdatePress(x2, y2);
-				if (button == GLFW_MOUSE_BUTTON_RIGHT)
+				if (button == GLFW_MOUSE_BUTTON_RIGHT && scn->zoom_area)
 				{
 					rndr->RightPressed();
 				}
