@@ -125,6 +125,7 @@ IGL_INLINE void Renderer::draw_by_info(int info_index){
         else
             Clear(info->Clear_RGBA.x(), info->Clear_RGBA.y(), info->Clear_RGBA.z(), info->Clear_RGBA.w(),info->flags);
     }
+    //std::cout << "draw info index: " << info_index << std::endl;
     scn->Draw(info->shaderIndx, Proj, View, info->viewportIndx, info->flags,info->property_id);
 }
 
@@ -485,10 +486,10 @@ void Renderer::MouseProccessing(int button, int mode, int viewportIndx)
     {
 
 		if(button == 2)
-			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[0]->MakeTransd(), viewportIndx);
+			scn->MouseProccessing(button, zrel, zrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[CurrentCameraIdx]->MakeTransd(), viewportIndx);
 		else
             
-			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[0]->MakeTransd(), viewportIndx);
+			scn->MouseProccessing(button, xrel, yrel, CalcMoveCoeff(mode & 7, viewports[viewportIndx].w()), cameras[CurrentCameraIdx]->MakeTransd(), viewportIndx);
     }
 
 }

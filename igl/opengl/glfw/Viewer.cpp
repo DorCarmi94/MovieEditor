@@ -825,9 +825,16 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         {
             if (selected_data_index >= post_init_index) {
                 WhenRotate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
+                data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(0, 1, 0), -xrel / 100.0);
+
                 data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(1, 0, 0), yrel / 100.0);
 
-                data_list[selected_data_index]->RotateInSystem(Eigen::Vector3d(0, 1, 0), xrel / 100.0);
+                if (objectIdxToCameraIdx.count(selected_data_index))
+                {
+                    //std::cout << objectIdxToCameraIdx[selected_data_index] << " here" << std::endl;
+                    rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yRotate, -xrel / 100);
+                    rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xRotate, yrel / 100);
+                }
             }
             else
             {
@@ -846,7 +853,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                     if (objectIdxToCameraIdx.count(selected_data_index))
                     {
                         rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xTranslate, -xrel / movCoeff);
-                        rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yTranslate, -yrel / movCoeff);
+                        rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yTranslate, yrel / movCoeff);
                     }
 
 
