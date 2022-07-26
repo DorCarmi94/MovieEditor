@@ -301,12 +301,12 @@ bool Renderer::Picking_2(int x, int y, int view_port_idx)
     glReadPixels(x, viewport[3]- y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
     int i = 0;
-    for (int i = 0; i < drawInfos.size(); i++) {
-        if (drawInfos[i]->viewportIndx == view_port_idx) {
-            std::cout << "di: "<< i << " " << drawInfos[i]->flags << std::endl;
-        }
+    //for (int i = 0; i < drawInfos.size(); i++) {
+    //    if (drawInfos[i]->viewportIndx == view_port_idx) {
+    //        std::cout << "di: "<< i << " " << drawInfos[i]->flags << std::endl;
+    //    }
 
-    }
+    //}
     isPicked =  scn->Picking(data,i);
     return isPicked;
 
@@ -315,6 +315,14 @@ bool Renderer::Picking_2(int x, int y, int view_port_idx)
 void Renderer::OutLine()
 {
     ActionDraw(0);
+}
+
+bool contains(std::vector<int> v, int value) {
+    if (std::count(v.begin(), v.end(), value)) {
+        //std::cout << "Element found";
+        return true;
+    }
+    return false;
 }
 
 void Renderer::PickMany(int viewportIndx)
@@ -326,7 +334,22 @@ void Renderer::PickMany(int viewportIndx)
         int yMin = std::min(viewports[viewportCurrIndx].w() - yWhenPress, viewports[viewportCurrIndx].w() - yold);
         int xMax = std::max(xWhenPress, xold);
         int yMax = std::max(viewports[viewportCurrIndx].w() - yWhenPress, viewports[viewportCurrIndx].w() - yold);
-		depth = scn->AddPickedShapes(cameras[0]->GetViewProjection().cast<double>() * (cameras[0]->MakeTransd()).inverse(), viewports[viewportCurrIndx], viewportCurrIndx, xMin, xMax, yMin, yMax,viewportIndx);
+        for (int i = xMin; i < xMax; i+=50) {
+            for (int j = yMin; j < yMax; j+=50) {
+                if (Picking_2(i, j, 0))
+                {
+                    if (!contains(scn->pShapes, scn->selected_data_index)) {
+                        isMany = true;
+                        scn->pShapes.push_back(scn->selected_data_index);
+                    }
+
+                }
+            }
+        }
+        for (int i = 0; i < scn->pShapes.size(); i++) {
+            std::cout << scn->pShapes[i] << std::endl;
+        }
+		//depth = scn->AddPickedShapes(cameras[0]->GetViewProjection().cast<double>() * (cameras[0]->MakeTransd()).inverse(), viewports[viewportCurrIndx], viewportCurrIndx, xMin, xMax, yMin, yMax,viewportIndx);
         if (depth != -1)
         {
             depth = (depth*2.0f - cameras[0]->GetFar()) / (cameras[0]->GetNear() - cameras[0]->GetFar());

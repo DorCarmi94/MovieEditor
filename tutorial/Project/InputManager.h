@@ -59,7 +59,8 @@
 			{
 				rndr->RightPressed();
 				if (scn->zoom_area) {
-					//rndr->PickMany(0);
+					rndr->PickMany(0);
+					scn->zoom_area = false;
 				}
 			}
 			

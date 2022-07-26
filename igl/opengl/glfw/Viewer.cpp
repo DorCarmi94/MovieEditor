@@ -941,13 +941,13 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
         }
         for (int i = 0; i < data_list.size(); i++) {
             if (pickedID == i) {
-                std::cout << "Picked shape : " << i << std::endl;
+                //std::cout << "Picked shape : " << i << std::endl;
                 // pShapes.push_back(i);
                 selected_data_index = i;
                 //SetShapeShader(i, 1);
-                std::cout << data_list[selected_data_index]->GetTranslation().x() << std::endl;
-                std::cout << data_list[selected_data_index]->GetTranslation().y() << std::endl;
-                std::cout << data_list[selected_data_index]->GetTranslation().z() << std::endl;
+                //std::cout << data_list[selected_data_index]->GetTranslation().x() << std::endl;
+                //std::cout << data_list[selected_data_index]->GetTranslation().y() << std::endl;
+                //std::cout << data_list[selected_data_index]->GetTranslation().z() << std::endl;
                 if (selected_data_index < 6) {
                     UpdateBezierInfo(previous_data_index);
                 }
@@ -1052,7 +1052,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
             Eigen::Vector4d pos = MVP * Model * Eigen::Vector4d(0,0,0,1);
             float xpix = (1 + pos.x() / pos.z()) * viewport.z() / 2;
             float ypix = (1 + pos.y() / pos.z()) * viewport.w() / 2;
-            if (/*data_list[i]->Is2Render(viewportIndx) && */xpix < right && xpix > left && ypix < bottom && ypix > up)
+            if (data_list[i]->Is2Render(viewportIndx) && xpix < right && xpix > left && ypix < bottom && ypix > up)
             {
                 pShapes.push_back(i);
                 data_list[i]->AddViewport(newViewportIndx);
@@ -1061,7 +1061,7 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                 isFound = true;
             }
         }
-        std::cout<<pShapes[0]<< " " <<pShapes[1] <<std::endl;
+        //std::cout<<pShapes[0]<< " " <<pShapes[1] <<std::endl;
 
         std::cout << std::endl;
         if (isFound)
