@@ -29,7 +29,7 @@ int main(int argc,char *argv[])
 
 	rndr->CopyDraw(0, rndr->viewport, 1);
 
-	//rndr->AddCamera(Eigen::Vector3d(0, 0, 10), CAMERA_ANGLE, ((float)DISPLAY_WIDTH - 400) / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
+	rndr->AddCamera(Eigen::Vector3d(0, 0, 10), CAMERA_ANGLE, ((float)DISPLAY_WIDTH - 400) / (float)DISPLAY_HEIGHT / 2, NEAR, FAR, 2);
 	//Scissor Square
 	rndr->AddViewport(400, 0, 600, 800);
 	rndr->CopyDraw(1, rndr->viewport, 2);

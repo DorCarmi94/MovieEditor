@@ -241,7 +241,7 @@ namespace igl
                         {
                             viewer->open_dialog_save_mesh();
                         }
-                        if (viewer->selected_data_index > 6) {
+                        if (viewer->selected_data_index >=viewer->post_init_index) {
                             ImGui::SliderFloat("Opacity", &viewer->data_list[viewer->selected_data_index]->transperancy, 0, 1);
                         }
 
@@ -252,7 +252,7 @@ namespace igl
                     {
                         float w = ImGui::GetContentRegionAvailWidth();
                         float p = ImGui::GetStyle().FramePadding.x;
-                        if (viewer->selected_data_index > 6) {
+                        if (viewer->selected_data_index >= viewer->post_init_index) {
                             if (ImGui::Button("change##Material", ImVec2(-1, 0)))
                             {
                                 int saved_texture_Indx = viewer->texture_index;
@@ -385,7 +385,7 @@ namespace igl
                         ImGui::PopItemWidth();
                         ImGui::SliderFloat("Current Run Time", &viewer->display_current_runtime, 0, viewer->display_runtime);
 
-                        if (viewer->selected_data_index > 6) {
+                        if (viewer->selected_data_index >= viewer->post_init_index) {
                             ImGui::SliderFloat("Shape Delay", &viewer->data_list[viewer->selected_data_index]->delay, 0, viewer->display_runtime);
                         }
 
@@ -399,80 +399,9 @@ namespace igl
 
                     }
 
-                    // Viewing options
-                    if (ImGui::CollapsingHeader("Viewing Options", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        if (ImGui::Button("Center object", ImVec2(-1, 0)))
-                        {
-                            std::cout << "not implemented yet" << std::endl;
-                            //      core[1].align_camera_center(viewer->data().V, viewer->data().F); TODO: add function like this to camera
-                        }
-
-                        // Zoom
-                        ImGui::PushItemWidth(80 * menu_scaling());
-                        if (camera[0]->_ortho)
-                            ImGui::DragFloat("Zoom", &(camera[0]->_length), 0.05f, 0.1f, 20.0f);
-                        else
-                            ImGui::DragFloat("Fov", &(camera[0]->_fov), 0.05f, 30.0f, 90.0f);
-
-                        // Select rotation type
-                        static Eigen::Quaternionf trackball_angle = Eigen::Quaternionf::Identity();
-                        static bool orthographic = true;
-
-                        // Orthographic view
-                        ImGui::Checkbox("Orthographic view", &(camera[0]->_ortho));
-                        if (camera[0]->_ortho) {
-                            camera[0]->SetProjection(0, camera[0]->_relationWH);
-                        }
-                        else {
-                            camera[0]->SetProjection(camera[0]->_fov > 0 ? camera[0]->_fov : 45, camera[0]->_relationWH);
-                        }
-
-                        ImGui::PopItemWidth();
-                    }
-
-                    // Helper for setting viewport specific mesh options
-                    auto make_checkbox = [&](const char* label, unsigned int& option)
-                    {
-                        return ImGui::Checkbox(label,
-                            [&]() { return drawInfos[0]->is_set(option); },
-                            [&](bool value) { return drawInfos[0]->set(option, value); }
-                        );
-                    };
-                    ImGui::ColorEdit4("Background", drawInfos[0]->Clear_RGBA.data(),
-                        ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
-
-                    // Draw options
-                    if (ImGui::CollapsingHeader("Draw Options", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        if (ImGui::Checkbox("Face-based", &(viewer->data()->face_based)))
-                        {
-                            viewer->data()->dirty = MeshGL::DIRTY_ALL;
-                        }
-                        //
-                        //    make_checkbox("Show texture", viewer->data().show_texture);
-                        //    if (ImGui::Checkbox("Invert normals", &(viewer->data().invert_normals)))
-                        //    {
-                        //      viewer->data().dirty |= igl::opengl::MeshGL::DIRTY_NORMAL;
-                        //    }
-                        make_checkbox("Show overlay", viewer->data()->show_overlay);
-                        make_checkbox("Show overlay depth", viewer->data()->show_overlay_depth);
-
-                        ImGui::ColorEdit4("Line color", viewer->data()->line_color.data(),
-                            ImGuiColorEditFlags_NoInputs | ImGuiColorEditFlags_PickerHueWheel);
-                        ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.3f);
-                        ImGui::DragFloat("Shininess", &(viewer->data()->shininess), 0.05f, 0.0f, 100.0f);
-                        ImGui::PopItemWidth();
-                    }
-
-                    // Overlays
-                    if (ImGui::CollapsingHeader("Overlays", ImGuiTreeNodeFlags_DefaultOpen))
-                    {
-                        make_checkbox("Wireframe", viewer->data()->show_lines);
-                        make_checkbox("Fill", viewer->data()->show_faces);
-
-                    }
+                    
                     ImGui::End();
+                    
                 }
 
 

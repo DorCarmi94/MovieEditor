@@ -158,95 +158,36 @@
 
 			case GLFW_KEY_UP:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->xRotate, 0.05f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_DOWN:
-				//scn->ShapeTransformation(scn->zTranslate, 3, 0);
-
-				//scn->shapeTransformation(scn->xGlobalRotate,-5.f);
-				//cout<< "down: "<<endl;
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->xRotate, -0.05f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_LEFT:
-				//scn->ShapeTransformation(scn->zTranslate, -3.0f, 0);
-
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->yRotate, 0.05f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_RIGHT:
-				//scn->ShapeTransformation(scn->xGlobalRotate,-5.f);
-				//cout<< "down: "<<endl;
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->yRotate, -0.05f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_U:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->yTranslate, 0.25f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_D:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->yTranslate, -0.25f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_L:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->xTranslate, -0.25f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 
 			
 			case GLFW_KEY_R:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->xTranslate, 0.25f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-					
-				}*/
 				break;
 			
 			case GLFW_KEY_B:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->zTranslate, 0.5f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 			case GLFW_KEY_F:
 				rndr->MoveCamera(rndr->CurrentCameraIdx, scn->zTranslate, -0.5f);
-				/*objIdx = scn->cameraToObjectIdx[rndr->CurrentCameraIdx];
-				if (objIdx != 0)
-				{
-					scn->data_list[objIdx]->SetTranslation(rndr->cameras[rndr->CurrentCameraIdx]->GetTranslation());
-				}*/
 				break;
 
 			case GLFW_KEY_BACKSPACE:
@@ -255,13 +196,16 @@
 				break;
 
 			case GLFW_KEY_1:
-				scn->ShapeTransformation(scn->zTranslate, -1, 0);
-
+				if (scn->selected_data_index >= scn->post_init_index)
+				{
+					scn->ShapeTransformation(scn->zTranslate, -1, 0);
+				}
 				break;
 			case GLFW_KEY_2:
-				std::cout << "picked 2\n";
-				scn->selected_data_index = 8;
-				scn->UpdateBezierInfo(8);
+				if (scn->selected_data_index >= scn->post_init_index)
+				{
+					scn->ShapeTransformation(scn->zTranslate, 1, 0);
+				}
 				break;
 			case GLFW_KEY_3:
 			{

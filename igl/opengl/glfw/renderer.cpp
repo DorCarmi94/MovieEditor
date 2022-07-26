@@ -380,7 +380,7 @@ void Renderer::PickMany(int viewportIndx)
             for (int j = yMin; j < yMax; j+=50) {
                 if (Picking_2(i, j, 0))
                 {
-                    if (!contains(scn->pShapes, scn->selected_data_index)) {
+                    if (!contains(scn->pShapes, scn->selected_data_index) && scn->selected_data_index>=scn->post_init_index) {
                         isMany = true;
                         scn->pShapes.push_back(scn->selected_data_index);
                     }

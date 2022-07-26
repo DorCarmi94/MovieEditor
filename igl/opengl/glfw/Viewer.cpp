@@ -473,14 +473,14 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   IGL_INLINE bool Viewer::SetAnimation() {
         isActive = !isActive;
         if (isActive) {
-            for (int i = 1; i < rndr->cameras.size(); i++) {//todo add shape to first can and change i to 0
+            for (int i = 2; i < rndr->cameras.size(); i++) {//todo add shape to first can and change i to 0
                 data_list[cameraToObjectIdx[i]]->Hide();
             }
             current_run_time = igl::get_seconds();
             copy_current_runtime = display_current_runtime;
         }
         else {
-            for (int i = 1; i < rndr->cameras.size(); i++) {//todo add shape to first can and change i to 0
+            for (int i = 2; i < rndr->cameras.size(); i++) {//todo add shape to first can and change i to 0
                 data_list[cameraToObjectIdx[i]]->UnHide();
             }
         }
@@ -911,7 +911,11 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                 }
                 else
                 {
-                    MyTranslate(Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff,0),0);
+                    for (size_t i = post_init_index; i < data_list.size(); i++)
+                    {
+                        data_list[i]->MyTranslate(Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0), 0);
+                    }
+                    
                 }
                 
             }
