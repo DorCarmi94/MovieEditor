@@ -205,7 +205,7 @@ public:
     Eigen::Vector3d prev_color;
     int prev_color_index;
 
-    bool zoom_area;
+    bool region_selection;
 
     void AddCameraShape();
 

@@ -384,14 +384,12 @@ namespace igl
                             ImGui::SliderFloat("Shape Delay", &viewer->data_list[viewer->selected_data_index]->delay, 0, viewer->display_runtime);
                         }
 
-
-
                     }
 
                     // zoom options
-                    if (ImGui::CollapsingHeader("zoom on area", ImGuiTreeNodeFlags_DefaultOpen))
+                    if (ImGui::CollapsingHeader("region", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        ImGui::Checkbox("zoom##zoom on area", &(viewer->zoom_area));
+                        ImGui::Checkbox("region selection##region", &(viewer->region_selection));
                     }
 
                     // Viewing options

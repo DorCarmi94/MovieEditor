@@ -80,7 +80,7 @@ namespace glfw
     material_index(0),
     texture_index(0),
     previous_data_index(0),
-    zoom_area(false)
+      region_selection(false)
 
   {
     data_list.front() = new ViewerData();
@@ -473,8 +473,16 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
   IGL_INLINE bool Viewer::SetAnimation() {
         isActive = !isActive;
         if (isActive) {
+            for (int i = 1; i < rndr->cameras.size(); i++) {//todo add shape to first can and change i to 0
+                data_list[cameraToObjectIdx[i]]->Hide();
+            }
             current_run_time = igl::get_seconds();
             copy_current_runtime = display_current_runtime;
+        }
+        else {
+            for (int i = 1; i < rndr->cameras.size(); i++) {//todo add shape to first can and change i to 0
+                data_list[cameraToObjectIdx[i]]->UnHide();
+            }
         }
         return isActive;
     }
@@ -837,7 +845,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
                         if (objectIdxToCameraIdx.count(theIdx))
                         {
-                            //std::cout << objectIdxToCameraIdx[selected_data_index] << " here" << std::endl;
                             rndr->MoveCamera(objectIdxToCameraIdx[theIdx], yRotate, -xrel / 100);
                             rndr->MoveCamera(objectIdxToCameraIdx[theIdx], xRotate, yrel / 100);
                         }
@@ -852,7 +859,6 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
 
                 if (objectIdxToCameraIdx.count(selected_data_index))
                 {
-                    //std::cout << objectIdxToCameraIdx[selected_data_index] << " here" << std::endl;
                     rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yRotate, -xrel / 100);
                     rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xRotate, yrel / 100);
                 }
@@ -885,13 +891,19 @@ IGL_INLINE bool Viewer::load_mesh_from_data(const Eigen::MatrixXd &V,
                     }
                 }
                 else if (selected_data_index > 0) {
-                    WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
-                    data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                   
                     if (objectIdxToCameraIdx.count(selected_data_index))
                     {
                         rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], xTranslate, -xrel / movCoeff);
                         rndr->MoveCamera(objectIdxToCameraIdx[selected_data_index], yTranslate, yrel / movCoeff);
+                        data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+
                     }
+                    else {
+                        WhenTranslate(scnMat * cameraMat, -xrel / movCoeff, yrel / movCoeff);
+                        data_list[selected_data_index]->current_position += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
+                    }
+
                     if (selected_data_index > 1 && selected_data_index < 6) {
                         data_list[previous_data_index]->p_bezier[selected_data_index - 2] += Eigen::Vector3d(-xrel / movCoeff, yrel / movCoeff, 0);
                         UpdateBezierInfo(previous_data_index);

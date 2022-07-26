@@ -31,7 +31,7 @@
 			if (x2 > 400)
 			{
 				rndr->UpdatePress(x2, y2);
-				if (button == GLFW_MOUSE_BUTTON_RIGHT && scn->zoom_area)
+				if (button == GLFW_MOUSE_BUTTON_RIGHT && scn->region_selection)
 				{
 					rndr->RightPressed();
 				}
@@ -59,9 +59,9 @@
 			if (rndr->IsRightPressed())
 			{
 				rndr->RightPressed();
-				if (scn->zoom_area) {
+				if (scn->region_selection) {
 					rndr->PickMany(0);
-					scn->zoom_area = false;
+					scn->region_selection = false;
 				}
 			}
 			

@@ -86,11 +86,8 @@ void Project::Init()
 	SetShapeShader(data_list.size() - 1, 2);
 	SetShapeMaterial(data_list.size() - 1, 1);
 
-
+	UpdateBezierInfo(post_init_index);
 	
-
-
-
 	selected_data_index = 0;
 }
 
