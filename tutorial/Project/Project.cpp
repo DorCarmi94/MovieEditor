@@ -36,6 +36,8 @@ void Project::Init()
 	AddShader("../../shaders/pickingShader");
 	AddShader("../../shaders/cubemapShader");
 	AddShader("../../shaders/basicShader");
+	AddShader("../../shaders/basicShaderCopy");
+
 
 	for (int i = 0; i < 4; i++) {
 		AddMaterial(texIDs + i, slots + i, 1);
@@ -68,20 +70,25 @@ void Project::Init()
 	SetShapeMaterial(data_list.size() - 1, 2);
 	SetShapeStatic(data_list.size() - 1);
 
-	post_init_index = data_list.size();
 	//bezier end
+
+	AddShape(Plane, -2, TRIANGLES, 2);
+	SetShapeShader(data_list.size() - 1, 3);
+	SetShapeMaterial(data_list.size() - 1, 2);
+	selected_data_index = data_list.size() - 1;
+	ShapeTransformation(zTranslate, -1.1, 1);
+	SetShapeStatic(data_list.size() - 1);
+
+	post_init_index = data_list.size();
+	//end init
 
 	AddShape(Cube, -1, TRIANGLES);
 	SetShapeShader(data_list.size() - 1, 2);
 	SetShapeMaterial(data_list.size() - 1, 1);
 
-	AddShape(Plane, -2, TRIANGLES,2);
-	SetShapeShader(data_list.size() - 1, 2);
-	SetShapeMaterial(data_list.size() - 1, 2);
+
 	
-	selected_data_index = data_list.size() - 1;
-	ShapeTransformation(zTranslate, -1.1, 1);
-	SetShapeStatic(data_list.size() - 1);
+
 
 
 	selected_data_index = 0;
@@ -104,13 +111,17 @@ void Project::Update(const Eigen::Matrix4f& Proj, const Eigen::Matrix4f& View, c
 	if (shaderIndx == 0) {
 		s->SetUniform4f("lightColor", r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 	}
-	else if (shaderIndx == 2 && shapeIndx != 0) {
+	else if (shaderIndx == 2 && shapeIndx != 0) 
+	{
 		if (shapeIndx == selected_data_index) {
 			s->SetUniform4f("lightColor", 1, 0, 0, 1);
 		}
 		else {
 			s->SetUniform4f("lightColor", 1, 1, 1, 1);
 		}
+	}
+	else if (shaderIndx == 3) {
+		s->SetUniform4f("lightColor", 0, 0, 1, 0.5);
 	}
 	s->Unbind();
 }

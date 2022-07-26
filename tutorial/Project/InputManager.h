@@ -53,10 +53,14 @@
 		else
 		{
 			Renderer* rndr = (Renderer*)glfwGetWindowUserPointer(window);
+			Project* scn = (Project*)rndr->GetScene();
 			rndr->UnPick(2);
 			if (rndr->IsRightPressed())
 			{
 				rndr->RightPressed();
+				if (scn->zoom_area) {
+					//rndr->PickMany(0);
+				}
 			}
 			
 		}
